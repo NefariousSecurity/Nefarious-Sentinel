@@ -149,6 +149,39 @@ configuration but was not the immediate cause of the Gradle failure.
 Collect the stacktrace before changing build tools, dependency versions,
 or the immutable v1.0.0 tag.
 
+## Second container test, 25 October 2026
+
+The fail-closed build runner now stops correctly on failed binary verification.
+
+- **Core:** F-Droid build PASS and verified reproducible against the exact
+  developer-signed GitHub APK. Allowed signer pin confirmed.
+- **Controller:** F-Droid Gradle compilation PASS, but binary verification
+  FAIL. Differences: `classes.dex` and `assets/dexopt/baseline.prof`.
+  The signature-copy step also reported
+  `APK Signing Block offset < central directory offset`.
+  Those output differences must be investigated before submission.
+- **Motion and SMS:** Not attempted in this test because the runner stopped
+  at Controller. Their earlier *local Mint* reproducibility tests passed.
+
+The original container's `serverwebroot` warning persists, but Core's
+successful full build and verification shows it is not an unconditional
+build blocker.
+
+A new read-only diagnostic,
+`python3 scripts/fdroid-controller-diff.py`, compares SHA-256 hashes
+and file sizes of ZIP entries from the released Controller, the container's
+unsigned Controller and, when still present, the Mint scratch build.
+No source, APK, key or device changes are made.
+
+F-Droid documents potential non-determinism in baseline profiles,
+compiler/dex output, build toolchain versions, and parallelism. Do not
+modify the immutable v1.0.0 source tag or republish APKs solely to force
+a match. Investigate the actual differences first.
+
+References:
+- https://f-droid.org/docs/Reproducible_Builds/
+- https://github.com/obfusk/apksigcopier
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
