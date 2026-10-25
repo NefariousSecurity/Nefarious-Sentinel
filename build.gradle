@@ -16,8 +16,8 @@ plugins {
  * The persisted post-expiry re-arm latch remains in Core for safe upgrades.
  */
 ext {
-    sentinelVersionCode = 4
-    sentinelVersionName = "1.0.0"
+    sentinelVersionCode = 5
+    sentinelVersionName = "1.0.1"
     sentinelBuildChannel = "STABLE"
     sentinelIsBeta = false
     sentinelBetaExpiryEpochMs = 0L
