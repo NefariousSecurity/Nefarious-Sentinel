@@ -952,6 +952,31 @@ It verifies expected categories are present and logs the SHA-256 of
 the fetched categories document. **Rerun of readmeta/lint is
 required**, and additional issues may still be identified.
 
+## Official F-Droid metadata lint: full config subtree needed, 25 October 2026
+
+The second isolated official `fdroid lint` attempt successfully
+loaded the previously missing `config/categories.yml`, and
+`fdroid readmeta` passed. Lint then stopped with a Python
+`FileNotFoundError` for `config/category_connectivity.png` in
+`common.load_localized_config()`. This is an incomplete lint
+test harness: the official categories configuration references
+icon files and additional localized configuration, whereas the
+scratch workspace contained only the root YAML document.
+
+To resolve the entire configuration dependency at once,
+`scripts/sentinel-v101-fdroid-lint.sh` now sparse-clones
+the official `https://gitlab.com/fdroid/fdroiddata.git` repo
+into a protected scratch directory, checks out its complete
+`config/` subtree, verifies the category YAML and a known
+category icon, and copies the entire subtree into the isolated
+lint workspace. The script records the fdroiddata commit and
+checksums for the downloaded category configuration/assets.
+The four real public application metadata files stay disabled.
+
+**Actual lint PASS is still pending a rerun.** No source APK,
+release tag, signed binary or device was changed by the failure
+or this lint-harness correction.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
