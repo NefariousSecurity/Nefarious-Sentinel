@@ -43,7 +43,7 @@ v1.0.0; future source tags will include the current main metadata.
 
 ## Reproducibility trial on Mint
 
-From the public checkout `~/Projects/Nefarious-Sentinel-Releases`:
+From the public checkout `~/Projects/Nefarious-Sentinel`:
 
 ```bash
 git pull --ff-only origin main
@@ -96,6 +96,6 @@ GitHub release, its APK hashes, or its signing certificate.
 
 ## Links
 
-- Public source: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases
-- Release: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/releases/tag/v1.0.0
+- Public source: https://github.com/NefariousSecurity/Nefarious-Sentinel
+- Release: https://github.com/NefariousSecurity/Nefarious-Sentinel/releases/tag/v1.0.0
 - fdroiddata: https://gitlab.com/fdroid/fdroiddata
