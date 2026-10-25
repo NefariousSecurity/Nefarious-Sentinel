@@ -18,7 +18,7 @@ CERT="46520e33367a8f8c65980e98a06df9091e6dfa65b157ddf78d4fdbd9d97beeb7"
 [[ "$(git -C "$ROOT" remote get-url origin)" == "https://github.com/NefariousSecurity/Nefarious-Sentinel.git" ]] ||
   die "Unexpected Git remote"
 [[ "$(git -C "$ROOT" rev-parse 'v1.0.1^{}')" == "$COMMIT" ]] || die "Tag mismatch"
-for cmd in git grep sed docker sha256sum; do
+for cmd in git grep sed docker sha256sum curl; do
   command -v "$cmd" >/dev/null || die "Missing command: $cmd"
 done
 for pkg in \
@@ -50,6 +50,23 @@ git -C "$WORK/fdroidserver" rev-parse HEAD > "$WORK/FDROIDSERVER_COMMIT.txt"
 echo "F-Droid tools commit: $(cat "$WORK/FDROIDSERVER_COMMIT.txt")"
 [[ -f "$WORK/fdroidserver/examples/config.yml" ]] || die "Official example F-Droid config missing"
 cp -- "$WORK/fdroidserver/examples/config.yml" "$WORK/config.yml"
+# Official fdroiddata controls the accepted Categories vocabulary. Without
+# config/categories.yml, fdroid lint rejects even the valid Security category.
+echo "===== FETCH OFFICIAL F-DROID CATEGORIES ====="
+mkdir -p "$WORK/config"
+curl --fail --location --silent --show-error --retry 2 \
+  --connect-timeout 15 --max-time 90 \
+  --proto '=https' --proto-redir '=https' \
+  --output "$WORK/config/categories.yml" \
+  "https://gitlab.com/fdroid/fdroiddata/-/raw/master/config/categories.yml"
+[[ -s "$WORK/config/categories.yml" ]] ||
+  die "Official fdroiddata categories.yml is empty"
+grep -q '^Security:' "$WORK/config/categories.yml" ||
+  die "Security category missing from official categories list"
+grep -q '^System:' "$WORK/config/categories.yml" ||
+  die "System category missing from official categories list"
+sha256sum "$WORK/config/categories.yml" > "$WORK/FDROIDDATA_CATEGORIES_SHA256SUMS"
+echo "PASS: Official fdroiddata categories loaded"
 mkdir -p "$WORK/metadata"
 for pkg in \
   com.nefarioussecurity.sentinel \
