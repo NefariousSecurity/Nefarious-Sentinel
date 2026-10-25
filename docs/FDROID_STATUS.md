@@ -780,6 +780,39 @@ post-upgrade reboot have been performed as part of this sequence.
 No official F-Droid submission or public v1.0.1 release publication
 has occurred.
 
+## Pixel 10a complete v1.0.1 non-destructive upgrade acceptance PASS, 25 October 2026
+
+Following guarded in-place `adb install -r` updates of Controller,
+Motion, SMS and Core, all four installed Sentinel packages on the
+dedicated development Pixel 10a reported v1.0.1 / versionCode 5.
+The Core remained the Android Device Owner in the post-upgrade
+`dumpsys device_policy` check; no reset or app-data deletion was
+requested.
+
+The operator performed and explicitly confirmed all four final
+post-Core-upgrade Controller acceptance checks **PASS**:
+1. Controller opened without crashing.
+2. Existing management PIN worked.
+3. Controller communicated successfully with Core v1.0.1.
+4. USB, Dead Man's Switch, Tamper and SMS wipe protections remained
+   disabled as expected.
+
+**Device upgrade and non-destructive runtime acceptance: PASS.**
+This does not constitute destructive-protection testing or a
+post-reboot/Direct Boot endurance check. The public tag `v1.0.1`
+has not been created/published as part of these checks, and no signed
+v1.0.1 GitHub release assets or official F-Droid merge request have
+yet been published.
+
+The exact **public source commit** whose four clean release builds
+were independently compared against all four signed candidate
+APKs is `10a5324be20cf1fe8714b9edce030f607749c10c`.
+Use this precise reviewed commit when preparing the release
+tag; do not accidentally tag subsequent documentation-only
+commits. Public release assets must be uploaded to the same repository
+named in `Binaries` URLs in the F-Droid metadata:
+`NefariousSecurity/Nefarious-Sentinel`.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
