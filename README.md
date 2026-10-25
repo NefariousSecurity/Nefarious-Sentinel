@@ -1,8 +1,36 @@
 # Nefarious Sentinel
 
+<p align="center">
+  <img src="controller/src/main/res/drawable-nodpi/sentinel_raven_shield_logo.png" alt="Nefarious Sentinel raven shield emblem" width="152" />
+</p>
+
+<p align="center">
+  <strong>Local-first Android device protection</strong><br />
+  USB data-host safeguards · Dead Man's Switch · Snatch Protection · optional Device Owner hardening
+</p>
+
+<p align="center">
+  <a href="https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/releases/tag/v1.0.0">Download v1.0.0 release candidate</a> ·
+  <a href="https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/tree/v1.0.0">Browse corresponding source</a> ·
+  <a href="https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/blob/main/SECURITY.md">Security reporting</a>
+</p>
+
+> **Current status:** v1.0.0 is published as a **prerelease** while final acceptance items remain open. Some opt-in features can irreversibly wipe the device. Read the [release notes](https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/releases/tag/v1.0.0) before installing.
+
+
 Nefarious Sentinel is an open-source, local-first Android device protection application derived in part from **Oblivion V2** by **Lethe Labs**. It offers opt-in lock, reboot and whole-device wipe protections for supported Android devices.
 
 **Warning:** Some protections can irreversibly factory-reset a device. Install only after reading the limitations, understanding the selected triggers and maintaining independent backups. A successful factory reset is not guaranteed under every hardware, OS or privilege condition.
+
+## Get started
+
+**Download:** Use the [official GitHub release](https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/releases/tag/v1.0.0). The release contains four mutually compatible APKs, a source archive and `SHA256SUMS.txt`. Confirm checksums and the [documented release signer](https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/releases/tag/v1.0.0) before installing.
+
+**Standard Mode:** Installs as normal Android applications, with optional Device Administrator privileges. This does **not** grant Device Owner authority, and some protections are unavailable.
+
+**Hardened Mode:** Sentinel Core must be explicitly provisioned as Device Owner on an eligible device before ordinary setup/accounts. Simply installing the APKs does not grant this authority. Provisioning may require starting with a freshly reset device. Never run a Device Owner command on a daily-use phone without understanding the consequences.
+
+**Privacy:** Sentinel operates locally; its features do not require a Sentinel-hosted account or remote management server. All destructive protection triggers are opt-in and must be deliberately configured.
 
 ## Current release architecture
 
