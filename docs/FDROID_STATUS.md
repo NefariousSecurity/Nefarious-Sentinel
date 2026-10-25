@@ -182,6 +182,33 @@ References:
 - https://f-droid.org/docs/Reproducible_Builds/
 - https://github.com/obfusk/apksigcopier
 
+## Third container test, 25 October 2026
+
+With `scripts/fdroid-buildserver-validate.sh --run`, using Debian OpenJDK
+**21.0.12.1**, x86_64 and 24 visible CPUs, all four metadata lint checks
+completed without reported errors.
+
+- **Core:** PASS, previously successfully rebuilt and verified against the
+  original developer-signed APK with certificate pinned.
+- **Motion:** PASS, newly rebuilt and verified against the original
+  developer-signed APK with certificate pinned.
+- **SMS:** PASS, newly rebuilt and verified against the original
+  developer-signed APK with certificate pinned.
+- **Controller:** Gradle build PASS but signature-preserving binary comparison
+  FAIL. Confirmed same two changed archive members as prior run:
+  `classes.dex` and `assets/dexopt/baseline.prof`. Earlier Mint unsigned
+  Controller build matched all 150 ZIP member contents in the published APK.
+- **Result:** `PASS: 3 of 4, FAIL: 1 of 4` and runner exits with failure.
+
+The current container reports 24 CPUs; the original Mint build's Java
+runtime and available CPUs have not yet been recorded, so a toolchain/CPU
+mismatch is an **unconfirmed hypothesis**. F-Droid's reproducibility
+documentation specifically calls out baseline.prof nondeterminism, CPU-count
+dependent DEX generation and Java/R8 version differences. First compare
+the original host Java/CPU environment to the container; then test
+reproducibility with a targeted, isolated change. Keep the public v1.0.0
+tag, signing identities and published APKs immutable.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
