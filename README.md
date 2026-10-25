@@ -64,6 +64,17 @@ Features must be intentionally configured and enabled. Review enabled state and 
 
 The stable Core and Controller retain an explicit recovery path for upgrades from **expired Beta builds**. A user whose Beta was expired must authenticate and re-arm on the newer release; installing a newer APK must not silently reactivate destructive actions.
 
+## F-Droid availability
+
+**Not yet listed in the official F-Droid repository.** We are preparing
+[F-Droid metadata and signature-preserving reproducible builds](docs/FDROID_STATUS.md)
+for all four component apps. The public v1.0.0 GitHub prerelease remains
+the authoritative, developer-signed distribution for this version.
+
+Avoid installing independently re-signed copies of Core, Controller or the
+helpers: signature-protected communication depends on their shared signer.
+Installing through F-Droid does not provision Android Device Owner authority.
+
 ## Release and verification
 
 Published builds, release notes and checksums: [Nefarious Sentinel Releases](https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/releases).
