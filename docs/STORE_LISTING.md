@@ -14,6 +14,22 @@
 
 Do not describe this prerelease as finally accepted until the remaining release gates are closed. Do not claim live SMS carrier ingress has been verified.
 
+## GitHub profile and social preview assets
+
+Run `python3 scripts/make-brand-assets.py` from this checkout. It reuses the
+canonical raven/shield artwork and writes two images under `branding-assets/`:
+
+- `nefarioussecurity-avatar.png` for the GitHub account profile picture.
+- `nefarious-sentinel-social-preview.png` for repository Settings > Social preview.
+
+These assets are NOT automatically uploaded by the generator. Account avatar
+and GitHub social preview changes require an authorised upload in the web UI.
+If Pillow is missing on Linux Mint, install the distribution's `python3-pil`.
+
+Repository description, topics, Issues and private vulnerability reporting can
+be configured by an administrator using
+`bash scripts/configure-public-repository.sh --check` followed by `--apply`.
+
 ## Suggested listing copy
 
 **One-line summary**
