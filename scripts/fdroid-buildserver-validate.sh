@@ -107,7 +107,7 @@ docker run --rm --user vagrant --env HOME=/home/vagrant \
     test -d "$JAVA_HOME" || { echo "STOP: JAVA_HOME missing"; exit 1; }
     echo "===== REPRODUCIBILITY ENVIRONMENT ====="
     java -version
-    printf "Java home: %s\\n" "$JAVA_HOME"
+    printf "Java home: %s\n" "$JAVA_HOME"
     printf "Visible CPU count: "
     nproc
     printf "Architecture: "
@@ -133,7 +133,7 @@ docker run --rm --user vagrant --env HOME=/home/vagrant \
       # In this diagnostic run, record failures and test the OTHER packages.
       if fdroid build --stop "$pkg" &&
          test -f "/build/unsigned/${pkg}_4.apk"; then
-        echo "PASS: F-Droid built and verified developer-signed APK: $pkg"
+        echo "PASS: F-Droid verified (or retained previously verified) APK: $pkg"
         successes=$((successes + 1))
       else
         echo "FAIL: F-Droid build or binary verification: $pkg"
