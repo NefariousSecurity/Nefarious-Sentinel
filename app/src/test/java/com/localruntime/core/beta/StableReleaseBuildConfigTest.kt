@@ -31,12 +31,12 @@ class StableReleaseBuildConfigTest {
 
         assertTrue(
             BuildConfig.VERSION_NAME.startsWith(
-                "1.0.0",
+                "1.0.1",
             ),
         )
 
         assertEquals(
-            4,
+            5,
             BuildConfig.VERSION_CODE,
         )
     }
