@@ -890,6 +890,32 @@ commits. Public release assets must be uploaded to the same repository
 named in `Binaries` URLs in the F-Droid metadata:
 `NefariousSecurity/Nefarious-Sentinel`.
 
+## v1.0.1 reviewed public source tag published, 25 October 2026
+
+After all four APKs passed reproducible-build, signed-content and
+Pixel 10a Device Owner in-place upgrade acceptance checks, the
+operator created and pushed an **annotated public Git tag**
+`v1.0.1` in `NefariousSecurity/Nefarious-Sentinel`.
+A remote verification (`git ls-remote --tags ... refs/tags/v1.0.1^{}`)
+confirmed the tag resolves to the exact public source commit
+`10a5324be20cf1fe8714b9edce030f607749c10c`
+whose four unsigned APKs were byte-identical with the verified
+reference and matched all four developer-signed staged candidate
+APKs after signature removal.
+
+Release preflight had also checked the existing signing-stage checksum
+manifest (all four OK), repository access by the `NefariousSecurity`
+GitHub account, and push permission. The public `v1.0.0` tag and
+signed APKs were preserved unchanged.
+
+**Source tag: PUBLISHED and VERIFIED.**
+**Signed release assets: NOT YET PUBLISHED** at the time of this
+record. Next create a draft v1.0.1 GitHub release attached to that
+existing tag with the four verified signed APKs and matching
+`SHA256SUMS.txt`. Independently check the draft metadata and
+downloaded assets before making the release public, then test
+final F-Droid upstream `Binaries` URLs and metadata.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
