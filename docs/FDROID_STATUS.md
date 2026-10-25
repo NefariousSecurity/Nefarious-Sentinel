@@ -680,6 +680,33 @@ non-destructive on-device upgrade acceptance testing. v1.0.0 tags
 and signed APKs remain unmodified; do not publish or deploy to a
 daily-use device until acceptance gates are complete.
 
+## Signed v1.0.1 staged-artifact integrity audit PASS, 25 October 2026
+
+A second, read-only local audit of the signed release staging
+directory `~/Projects/fdroid-sentinel-validation/v101-signed-stage.e6m4env9`
+completed successfully:
+
+- Staging directory permissions were `0700`, with no symlink,
+  and no `INCOMPLETE.txt` marker.
+- `SOURCE_COMMIT.txt` matched the intended private release revision
+  `ccd6c1419440acc49d8909af4049c6482f77442e`.
+- `sha256sum -c SHA256SUMS` passed for all four signed release APKs:
+  Core, Controller, Motion and SMS.
+- Each APK's Android manifest was checked with `aapt dump badging`;
+  none was marked debuggable, and the exact APK count was four.
+
+This complements the preceding signing-script checks of package
+identity, version name/code, original release signing certificate,
+valid v2 APK signatures and signed-to-unsigned reproducibility.
+
+**Signed v1.0.1 staging is complete**, but this does **not**
+establish installed-device safe-upgrade acceptance or official
+F-Droid `fdroiddata` / public upstream `Binaries` verification.
+Do not publish or deploy to daily-driver devices before those gates.
+Before connecting the dedicated Pixel 10a, check Sentinel maintenance
+and tamper/wipe protections via existing trusted on-device controls;
+USB/ADB connections themselves may be safety-relevant for Sentinel.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
