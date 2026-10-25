@@ -606,6 +606,25 @@ certificate identity check is the immediate remaining gate before
 release-signing preparation. This pre-flight does not independently
 verify that the key-entry password will work during signing.
 
+## Signing alias certificate continuity confirmed, 25 October 2026
+
+A read-only local `keytool -list -v` inspection confirmed that the alias
+specified in the Git-ignored `keystore.properties` is a **PrivateKeyEntry**.
+A subsequent `keytool -exportcert` produced a certificate whose SHA-256
+is **exactly**
+`46520e33367a8f8c65980e98a06df9091e6dfa65b157ddf78d4fdbd9d97beeb7`,
+matching the original four signed v1.0.0 APKs. Credentials and the
+private key were not displayed or copied and no APK was signed during
+this check.
+
+**Next gate:** Carefully controlled signing of NEW v1.0.1 artifacts
+using the existing keystore alias, writing to a fresh 0700 staging
+directory only, then validate their signatures, package identity,
+digest and `apksigcopier compare --unsigned` against independently
+rebuilt unsigned binaries. This proves certificate compatibility,
+not yet installed-device upgrade acceptance or final official
+F-Droid `fdroiddata`/published-`Binaries` verification.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
