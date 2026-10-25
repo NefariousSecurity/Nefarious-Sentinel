@@ -6,7 +6,7 @@ This policy applies to the **Nefarious Sentinel** fork maintained by NefariousSe
 
 Please **never post exploit details, bypass steps, device identifiers, secrets, or destructive proof-of-concept instructions in a public issue**.
 
-Use GitHub's **Report a vulnerability** option for the [Nefarious Sentinel Releases repository](https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/security) when that option is enabled. If it is unavailable, open a **non-sensitive** issue asking the maintainers to provide a private reporting channel, without disclosing vulnerability details.
+Use GitHub's **Report a vulnerability** option for the [Nefarious Sentinel Releases repository](https://github.com/NefariousSecurity/Nefarious-Sentinel/security) when that option is enabled. If it is unavailable, open a **non-sensitive** issue asking the maintainers to provide a private reporting channel, without disclosing vulnerability details.
 
 **Stable-release gate:** Maintainers must verify a working private reporting channel before v1.0.0 publication.
 
@@ -22,6 +22,6 @@ Destructive issues and remote-trigger authentication bypasses are release blocke
 
 ## Support and source
 
-For non-sensitive feature requests and ordinary bugs, use [release repository issues](https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/issues).
+For non-sensitive feature requests and ordinary bugs, use [release repository issues](https://github.com/NefariousSecurity/Nefarious-Sentinel/issues).
 
 Nefarious Sentinel is licensed under AGPL-3.0. Each distributed binary release must have corresponding source available with licence notices and appropriate upstream attribution.
