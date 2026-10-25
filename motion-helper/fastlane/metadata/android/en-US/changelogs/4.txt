@@ -1,0 +1,2 @@
+Version 1.0.0, code 4. Signed helper compatible with the Sentinel
+1.0.0 Core and Controller. Security event handling unchanged from Beta 1.
