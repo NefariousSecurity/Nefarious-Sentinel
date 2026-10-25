@@ -296,6 +296,28 @@ equivalence verification.
 Keep the four public F-Droid candidates disabled pending all four
 developer-signed binary verification passes.
 
+## JVM disassembly of the pre-R8 Controller mismatch, 25 October 2026
+
+The ten differing Kotlin class files were inspected using the same
+host `javap -c -p -s` tool. **All ten have different disassembly**, including
+the main `SentinelControllerAppKt.class`, where Compose-generated parameter
+change checks and other compiler instructions differ between the Mint
+reference and F-Droid output.
+
+This rules out an explanation involving **only** R8 mapping metadata,
+DEX header bytes or baseline profile metadata. It does not establish
+whether resulting app behaviour differs, and does not by itself show
+different source code.
+
+The former Mint reproducibility test reported **89 Gradle tasks from
+cache**. Since F-Droid performed its own compilation, the next targeted
+experiment is to compile the immutable `v1.0.0` Controller's Kotlin
+classes in a completely new Mint scratch tree with
+`--no-build-cache --rerun-tasks`, using
+`scripts/fdroid-controller-clean-kotlin-test.sh`. The resulting class
+hashes will be compared to the prior Mint and F-Droid outputs.
+This test does not alter the signed release or the source tag.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
