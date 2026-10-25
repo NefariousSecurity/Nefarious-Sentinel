@@ -751,6 +751,35 @@ Pixel 10a installed-device upgrade and protection-state assessment,
 public v1.0.1 release/tag, live download URL checks and final official
 F-Droid metadata build/merge request remain pending.
 
+## Pixel 10a v1.0.1 Device Owner Core upgrade PASS, 25 October 2026
+
+The developer completed a guarded in-place Core upgrade on the dedicated
+Pixel 10a development device. Before upgrading, the script checked
+the intended `stallion` device; the protected signing-stage manifest
+(`sha256sum -c SHA256SUMS`, four APKs OK); versions
+Core=4, Controller=5, Motion=5 and SMS=5; Core Device Owner identity;
+and the new Core signed APK's pinned signing certificate,
+package identity, `versionName=1.0.1`, `versionCode=5`, and
+non-debuggable release status. The script required an interactive YES
+after directing the operator to reconfirm that destructive protections
+were currently disabled.
+
+`adb install -r` of `Nefarious-Sentinel-Core-v1.0.1.apk`
+reported **Success**. The immediate post-install `dumpsys package`
+check confirmed Core **v1.0.1 / code 5**. A subsequent
+`dumpsys device_policy` check reported that Core **remained
+Android Device Owner**. Controller, Motion and SMS had previously
+been upgraded successfully to v1.0.1/code 5 on the same Pixel 10a.
+
+**Result: Four-of-four APK upgrade installation PASS, Device Owner
+preservation PASS.** The final *runtime* acceptance check is
+still pending: confirm Controller opens, existing management PIN
+works, Controller/Core IPC functions, and destructive protection
+configuration is retained/disabled. No destructive tests or
+post-upgrade reboot have been performed as part of this sequence.
+No official F-Droid submission or public v1.0.1 release publication
+has occurred.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
