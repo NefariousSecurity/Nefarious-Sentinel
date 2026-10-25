@@ -1,0 +1,1 @@
+Optional motion helper for Nefarious Sentinel
