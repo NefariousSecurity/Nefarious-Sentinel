@@ -928,6 +928,30 @@ device installation or release asset was modified by this test.
 Final actual F-Droid recipe lint/build/verification and official
 GitLab `fdroiddata` merge-request submission still remain pending.
 
+## F-Droid isolated metadata lint: category-config harness fix, 25 October 2026
+
+The local read-only F-Droid metadata-lint gate ran with official
+`fdroidserver` checkout commit
+`2d1e622fbbce7eec379453983435e5b14bea22b5`,
+inside the existing official buildserver container. `fdroid readmeta`
+succeeded, but lint on Sentinel Core emitted
+`Categories 'Security' is not valid` and the test stopped.
+
+Investigation of fdroidserver `lint.py` showed that valid category
+names are loaded dynamically from fdroiddata's
+`config/categories.yml`, **which our isolated test workspace did
+not include**. The official fdroiddata categories YAML *does*
+contain `Security` and `System`, so the error does **not**
+establish invalid package metadata and we did **not** change the
+four recipes' `Categories: Security` values.
+
+The `scripts/sentinel-v101-fdroid-lint.sh` preparation script was
+updated to fetch the official fdroiddata categories list over HTTPS
+into its isolated `config/categories.yml` before `fdroid lint`.
+It verifies expected categories are present and logs the SHA-256 of
+the fetched categories document. **Rerun of readmeta/lint is
+required**, and additional issues may still be identified.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
