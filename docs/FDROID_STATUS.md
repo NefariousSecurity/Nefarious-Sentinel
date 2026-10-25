@@ -905,6 +905,29 @@ the four draft recipes on public branch
 `10a5324be20cf1fe8714b9edce030f607749c10c`.
 Each draft remains **disabled** pending fdroidserver testing.
 
+## Anonymous public v1.0.1 APK delivery verified, 25 October 2026
+
+Following publication of GitHub `v1.0.1` (release ID
+`423306616`), the developer independently downloaded all four
+signed APKs and `SHA256SUMS.txt` from the exact public HTTPS
+`https://github.com/NefariousSecurity/Nefarious-Sentinel/releases/download/v1.0.1/`
+paths referenced by our F-Droid `Binaries` recipes, using
+`curl --fail --location` without GitHub download authorization.
+
+For **Core, Controller, Motion and SMS**, each public APK was
+byte-for-byte identical (`cmp`) to the verified signed local
+release candidate and carried the pinned SHA-256 signer certificate
+`46520e33367a8f8c65980e98a06df9091e6dfa65b157ddf78d4fdbd9d97beeb7`.
+The public checksum manifest also matched the original (`cmp`),
+and `sha256sum -c SHA256SUMS.txt` reported all four APKs **OK**.
+The verification artifacts remain in
+`~/Projects/fdroid-sentinel-validation/v101-fdroid-public-verify.tRXWo8N2`.
+
+**Public upstream Binaries delivery gate: PASS.** No local source,
+device installation or release asset was modified by this test.
+Final actual F-Droid recipe lint/build/verification and official
+GitLab `fdroiddata` merge-request submission still remain pending.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
