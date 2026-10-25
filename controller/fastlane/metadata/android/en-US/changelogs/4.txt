@@ -1,0 +1,5 @@
+Stable build channel removes the Beta 1 expiry. Added corrected
+Android system Back navigation on Controller child pages. The Core security
+implementation and four-APK protocol remain unchanged from Beta 1.
+Release candidate: expired-beta recovery and real carrier SMS ingress remain
+unverified.
