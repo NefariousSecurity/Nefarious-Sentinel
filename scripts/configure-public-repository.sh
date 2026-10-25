@@ -5,7 +5,7 @@
 set -euo pipefail
 umask 077
 
-REPO="NefariousSecurity/Nefarious-Sentinel-Releases"
+REPO="NefariousSecurity/Nefarious-Sentinel"
 DESC="Open-source, local-first Android device protection with USB safeguards, Dead Man's Switch and optional Device Owner hardening."
 HOME_URL="https://github.com/${REPO}/releases"
 usage() { echo "Usage: bash scripts/configure-public-repository.sh --check|--apply"; }
