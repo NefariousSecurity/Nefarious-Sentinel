@@ -10,12 +10,12 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/releases/tag/v1.0.0">Download v1.0.0 release candidate</a> ·
-  <a href="https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/tree/v1.0.0">Browse corresponding source</a> ·
-  <a href="https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/blob/main/SECURITY.md">Security reporting</a>
+  <a href="https://github.com/NefariousSecurity/Nefarious-Sentinel/releases/tag/v1.0.0">Download v1.0.0 release candidate</a> ·
+  <a href="https://github.com/NefariousSecurity/Nefarious-Sentinel/tree/v1.0.0">Browse corresponding source</a> ·
+  <a href="https://github.com/NefariousSecurity/Nefarious-Sentinel/blob/main/SECURITY.md">Security reporting</a>
 </p>
 
-> **Current status:** v1.0.0 is published as a **prerelease** while final acceptance items remain open. Some opt-in features can irreversibly wipe the device. Read the [release notes](https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/releases/tag/v1.0.0) before installing.
+> **Current status:** v1.0.0 is published as a **prerelease** while final acceptance items remain open. Some opt-in features can irreversibly wipe the device. Read the [release notes](https://github.com/NefariousSecurity/Nefarious-Sentinel/releases/tag/v1.0.0) before installing.
 
 
 Nefarious Sentinel is an open-source, local-first Android device protection application derived in part from **Oblivion V2** by **Lethe Labs**. It offers opt-in lock, reboot and whole-device wipe protections for supported Android devices.
@@ -24,7 +24,7 @@ Nefarious Sentinel is an open-source, local-first Android device protection appl
 
 ## Get started
 
-**Download:** Use the [official GitHub release](https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/releases/tag/v1.0.0). The release contains four mutually compatible APKs, a source archive and `SHA256SUMS.txt`. Confirm checksums and the [documented release signer](https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/releases/tag/v1.0.0) before installing.
+**Download:** Use the [official GitHub release](https://github.com/NefariousSecurity/Nefarious-Sentinel/releases/tag/v1.0.0). The release contains four mutually compatible APKs, a source archive and `SHA256SUMS.txt`. Confirm checksums and the [documented release signer](https://github.com/NefariousSecurity/Nefarious-Sentinel/releases/tag/v1.0.0) before installing.
 
 **Standard Mode:** Installs as normal Android applications, with optional Device Administrator privileges. This does **not** grant Device Owner authority, and some protections are unavailable.
 
@@ -77,7 +77,7 @@ Installing through F-Droid does not provision Android Device Owner authority.
 
 ## Release and verification
 
-Published builds, release notes and checksums: [Nefarious Sentinel Releases](https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/releases).
+Published builds, release notes and checksums: [Nefarious Sentinel Releases](https://github.com/NefariousSecurity/Nefarious-Sentinel/releases).
 
 For each release, verify:
 1. All four APKs have the expected package IDs and version.
@@ -97,7 +97,7 @@ Source snapshots supplied with releases are the intended public source distribut
 - A factory reset will destroy locally stored data. Device backups and safe recovery procedures are your responsibility.
 - SMS support requires a compatible telephony stack, permissions and actual message delivery. Carrier delivery can be delayed or unavailable.
 
-Report defects in the [public release repository](https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/issues). **Do not disclose vulnerability exploit details in a public issue.** See [SECURITY.md](SECURITY.md).
+Report defects in the [public release repository](https://github.com/NefariousSecurity/Nefarious-Sentinel/issues). **Do not disclose vulnerability exploit details in a public issue.** See [SECURITY.md](SECURITY.md).
 
 ## Building
 
