@@ -1,0 +1,13 @@
+Sentinel Motion Service is an optional background helper app for
+Nefarious Sentinel's Snatch Protection functionality.
+
+Install with the same-version Sentinel Core and Controller signed by the
+same developer certificate. This helper cannot independently manage or
+wipe a device. It sends motion events to the authorised Core.
+
+Motion sensing and the resulting Lock or Reboot actions must be enabled
+explicitly and depend on the Android permissions and administration mode.
+An ordinary F-Droid installation does not grant Device Owner privileges.
+
+Nefarious Sentinel is AGPL-3.0 and is derived in part from Oblivion V2 by
+Lethe Labs. Release 1.0.0 is a prerelease.
