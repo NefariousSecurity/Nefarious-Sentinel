@@ -48,6 +48,8 @@ git clone --depth=1 https://gitlab.com/fdroid/fdroidserver.git "$WORK/fdroidserv
 [[ -x "$WORK/fdroidserver/fdroid" ]] || die "F-Droid CLI absent from fetched source"
 git -C "$WORK/fdroidserver" rev-parse HEAD > "$WORK/FDROIDSERVER_COMMIT.txt"
 echo "F-Droid tools commit: $(cat "$WORK/FDROIDSERVER_COMMIT.txt")"
+[[ -f "$WORK/fdroidserver/examples/config.yml" ]] || die "Official example F-Droid config missing"
+cp -- "$WORK/fdroidserver/examples/config.yml" "$WORK/config.yml"
 mkdir -p "$WORK/metadata"
 for pkg in \
   com.nefarioussecurity.sentinel \
