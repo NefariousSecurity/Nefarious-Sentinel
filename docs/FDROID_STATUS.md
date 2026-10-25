@@ -1011,6 +1011,24 @@ A new isolated harness
 the official Core recipe first, without copying signing
 credentials or modifying the phone, tags or release assets.
 
+## F-Droid Core recipe test: unsupported --local option, 25 October 2026
+
+The first attempt to exercise the official Core recipe with
+`fdroid build --test --local com.nefarioussecurity.sentinel`
+completed its preflight and SDK provisioning but did **not**
+start a Gradle build. Official fdroidserver  tooling reported
+`fdroid build: error: unrecognized arguments: --local`.
+
+Per fdroidserver's current documented CLI, a local recipe build
+is the default when `--server` is omitted, and `--test`
+directs test artifacts to a temporary output directory. The
+isolated harness was corrected to call:
+`fdroid build --test --stop --no-tarball com.nefarioussecurity.sentinel:5`.
+The `--stop` switch makes failures fatal, and the app ID with
+`:5` restricts the tested version. The previous run did not
+change application metadata, release assets or device settings.
+**Actual F-Droid recipe build and signed binary match remain pending.**
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
