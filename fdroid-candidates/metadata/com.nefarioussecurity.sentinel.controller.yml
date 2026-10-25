@@ -7,7 +7,7 @@ AuthorName: NefariousSecurity
 WebSite: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases
 SourceCode: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases
 IssueTracker: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/issues
-Summary: Local-first Android protection Controller for compatible Sentinel Core. Supp
+Summary: Android security controls for local Sentinel protection
 Description: |-
   Local-first Android protection Controller for compatible Sentinel Core. Supports Standard Mode and Hardened Device Owner configuration.
   
