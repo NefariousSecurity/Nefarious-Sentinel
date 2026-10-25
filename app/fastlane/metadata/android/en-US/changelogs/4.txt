@@ -1,0 +1,4 @@
+Version 1.0.0, code 4. Stable build channel with no current-build
+beta expiry. Core protections and security logic are unchanged from Beta 1.
+Existing expired-beta suppression is deliberately preserved until
+authenticated re-arm.
