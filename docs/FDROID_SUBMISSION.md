@@ -8,7 +8,7 @@ The development GitHub repository is private. Official F-Droid must be able
 to clone and build public, licence-compliant corresponding source. The
 separate public repository is:
 
-`https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases`
+`https://github.com/NefariousSecurity/Nefarious-Sentinel`
 
 The publication script exports a sanitised snapshot as Git branch
 `source-v1.0.0` and annotated tag `v1.0.0` (the tag is not cryptographically
