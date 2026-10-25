@@ -120,8 +120,29 @@ docker run --rm --user vagrant --env HOME=/home/vagrant \
       com.nefarioussecurity.sentinel.motion \
       com.nefarioussecurity.sentinel.sms; do
       echo "===== F-DROID BUILD: $pkg ====="
-      fdroid build "$pkg" || exit 1
+      # fdroid build can report "N build failed" yet return status 0
+      # unless --stop is explicitly selected. Without --stop our initial
+      # four failures were incorrectly labelled PASS.
+      if ! fdroid build --stop "$pkg"; then
+        echo "FAIL: F-Droid build failed for $pkg."
+        echo "===== GRADLE STACKTRACE DIAGNOSTIC (NO APK INSTALL) ====="
+        gradle_bin=/home/vagrant/.cache/gradlew-fdroid/versions/8.2/bin/gradle
+        if test -x "$gradle_bin" && test -d "/build/build/$pkg"; then
+          (
+            cd "/build/build/$pkg"
+            "$gradle_bin" --no-daemon --offline --stacktrace help
+          ) || true
+        else
+          echo "Gradle 8.2 diagnostic executable or app workspace unavailable."
+        fi
+        exit 1
+      fi
+      if ! test -f "/build/unsigned/${pkg}_4.apk"; then
+        echo "FAIL: Build did not produce expected unsigned APK for $pkg"
+        exit 1
+      fi
+      echo "PASS: F-Droid produced unsigned APK for $pkg"
     done
-    echo "PASS: All four F-Droid build commands completed."
-    echo "Inspect F-Droid binary verification logs before submitting."
+    echo "PASS: All four F-Droid unsigned APKs were built successfully."
+    echo "NEXT: Confirm independently verified binary comparison before submitting."
   '
