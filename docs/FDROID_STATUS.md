@@ -126,6 +126,29 @@ Official docs:
 - https://f-droid.org/docs/Submitting_to_F-Droid_Quick_Start_Guide/
 - https://f-droid.org/docs/Reproducible_Builds/
 
+## First container test result, 25 October 2026
+
+The official F-Droid `buildserver` image was downloaded successfully and
+`fdroid readmeta` and `fdroid lint` passed for all four draft packages.
+
+**Builds did not pass**: all four `fdroid build` attempts failed during
+Gradle 8.2 initialisation at `FileAccessTimeJournal` with
+`For input string: ""`. Each package fetched the intended public
+`v1.0.0` source revision `4a7c3a55623203116dda4d2aa293baf8c0d608b5`.
+Gradle did not reach Android compilation.
+
+The first iteration of our script incorrectly reported `PASS` because
+`fdroid build` can return status zero despite reporting failed builds.
+This is a **false positive, not a passed F-Droid build**. The script now
+uses `fdroid build --stop` and requires an expected unsigned APK output
+for each package, and attempts a Gradle stacktrace on failures.
+
+Do not submit or enable public recipe drafts yet. The initial error
+`serverwebroot: has blank value` was also reported by the test
+configuration but was not the immediate cause of the Gradle failure.
+Collect the stacktrace before changing build tools, dependency versions,
+or the immutable v1.0.0 tag.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
