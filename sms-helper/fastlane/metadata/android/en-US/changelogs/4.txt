@@ -1,0 +1,2 @@
+Version 1.0.0, code 4. Compatible with the matching Sentinel Core
+and Controller. Real carrier SMS ingress remains unverified at release.
