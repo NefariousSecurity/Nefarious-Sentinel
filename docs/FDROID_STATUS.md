@@ -396,6 +396,39 @@ Next: compare individual JVM methods/instruction streams from the
 original and fresh Kotlin class outputs, rather than infer a missing
 feature from class-file hashes.
 
+## v1.0.1 candidate: TWO independent pristine Mint builds match, 25 October 2026
+
+The private development branch `release/v1.0.1-rc1` was committed as
+`cd76b4b`, changing shared `versionCode` 4 -> 5 and `versionName`
+1.0.0 -> 1.0.1; stable channel and beta-disabled settings remain.
+**No public v1.0.1 tag or signed APKs have been published.**
+
+Two independent source archive extractions from that commit were built with
+`./gradlew --no-daemon --no-build-cache --rerun-tasks`. Each performed
+**251 tasks executed** and produced four unsigned APKs. Whole-file SHA-256
+comparisons matched between the builds for **all four APKs**:
+
+| App module | Matching SHA-256 |
+| --- | --- |
+| `app` (Core) | `feab9330016b9b05e095c3ed8fe6159106831f072021ce6d971c40b2fef2121e` |
+| `controller` | `30d1a4a4ac2ae980ae6d22cc8a99d9b3567aa7e1b1cab887e08c15e8ebb75ba9` |
+| `motion-helper` | `a01c0518d7d1e4199ef2c5f8d27c7bc02d81eba44698e64037f41736ca5dff09` |
+| `sms-helper` | `1593dacdd99bcd679240947eb483fc9c92b3fd0b726939d6c5e03fc0af0d508e` |
+
+Workspaces on Mint:
+`~/Projects/fdroid-sentinel-validation/v101-clean.Fc2Z6qIm` and
+`~/Projects/fdroid-sentinel-validation/v101-verify.LyJF6fd6`.
+
+This proves *repeatable pristine Mint builds*, not independent
+F-Droid-buildserver reproducibility. The existing fdroiddata test recipes
+and validation runner still refer to `v1.0.0`, `versionCode 4` and
+published developer-signed v1.0.0 binaries. **Do not run those scripts
+unchanged as a supposed v1.0.1 validation.** Before publishing anything,
+rebuild the unpublished candidate source in the F-Droid container from an
+isolated sanitised copy without private keys, then compare artifacts.
+Final `Binaries` + `AllowedAPKSigningKeys` verification needs an actual
+new public source revision and new verified developer-signed APKs.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
