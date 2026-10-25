@@ -22,7 +22,7 @@ for cmd in git sha256sum apksigner aapt awk sed grep tr tar zip mktemp; do
   command -v "$cmd" >/dev/null || die "Required tool absent: $cmd"
 done
 CERT=46520e33367a8f8c65980e98a06df9091e6dfa65b157ddf78d4fdbd9d97beeb7
-REPO=NefariousSecurity/Nefarious-Sentinel-Releases
+REPO=NefariousSecurity/Nefarious-Sentinel
 TAG=v1.0.0
 
 # SHA-256 | Package ID | Mint build output | public release asset filename
