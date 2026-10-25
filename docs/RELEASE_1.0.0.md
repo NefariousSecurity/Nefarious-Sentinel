@@ -2,7 +2,7 @@
 
 Source branch: `release/v1.0.0-rc1` (based on public Beta 1 source commit `f13cb8890c92fa8392431af7bbcb76ed3c825032`).
 
-Public distribution: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases
+Public distribution: https://github.com/NefariousSecurity/Nefarious-Sentinel
 
 ## Hard stop conditions
 
