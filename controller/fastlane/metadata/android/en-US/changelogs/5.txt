@@ -1,0 +1,1 @@
+Sentinel Controller 1.0.1 (code 5): reproducible-build maintenance release. Existing controls and Android Back navigation retained. No new security actions or permissions. Signed with the existing Sentinel release identity.
