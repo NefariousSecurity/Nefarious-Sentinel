@@ -1,0 +1,29 @@
+Categories:
+  - Security
+License: AGPL-3.0-only
+AuthorName: NefariousSecurity
+AuthorWebSite: https://github.com/NefariousSecurity
+WebSite: https://github.com/NefariousSecurity/Nefarious-Sentinel
+SourceCode: https://github.com/NefariousSecurity/Nefarious-Sentinel
+IssueTracker: https://github.com/NefariousSecurity/Nefarious-Sentinel/issues
+RepoType: git
+Repo: https://github.com/NefariousSecurity/Nefarious-Sentinel.git
+
+# Do not let F-Droid generate four unrelated signing identities.
+AllowedAPKSigningKeys:
+  - 46520e33367a8f8c65980e98a06df9091e6dfa65b157ddf78d4fdbd9d97beeb7
+Binaries: https://github.com/NefariousSecurity/Nefarious-Sentinel/releases/download/v%v/Nefarious-Sentinel-Controller-v%v.apk
+
+Builds:
+  - versionName: 1.0.1
+    versionCode: 5
+    commit: 10a5324be20cf1fe8714b9edce030f607749c10c
+    subdir: controller
+    gradle:
+      - 'yes'
+    prebuild: sed -i '/^[[:space:]]*signingConfig signingConfigs.release[[:space:]]*$/d' build.gradle
+
+AutoUpdateMode: None
+UpdateCheckMode: None
+CurrentVersion: 1.0.1
+CurrentVersionCode: 5
