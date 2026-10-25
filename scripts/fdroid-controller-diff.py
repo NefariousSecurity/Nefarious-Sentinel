@@ -42,7 +42,7 @@ def dex_summary(apk: Path) -> tuple[dict[str, int], list[bytes], bytes]:
     """Read DEX header tables and raw MUTF-8 string bytes, with no writes."""
     with zipfile.ZipFile(apk) as z:
         blob = z.read("classes.dex")
-    if not blob.startswith(b"dex\\n") or len(blob) < 0x70:
+    if not blob.startswith(b"dex\n") or len(blob) < 0x70:
         raise ValueError(f"Unsupported or truncated classes.dex in {apk}")
     fields = {
         "file_size": 0x20,
@@ -72,7 +72,7 @@ def dex_summary(apk: Path) -> tuple[dict[str, int], list[bytes], bytes]:
                 break
         else:
             raise ValueError("Malformed DEX string length")
-        end = blob.find(b"\\x00", cursor)
+        end = blob.find(b"\x00", cursor)
         if end == -1:
             raise ValueError("Unterminated DEX string")
         strings.append(blob[cursor:end])
@@ -80,7 +80,7 @@ def dex_summary(apk: Path) -> tuple[dict[str, int], list[bytes], bytes]:
 
 
 def compare_dex(reference: Path, built: Path) -> None:
-    print("\\n===== DEX STRUCTURE COMPARISON (READ ONLY) =====")
+    print("\n===== DEX STRUCTURE COMPARISON (READ ONLY) =====")
     try:
         old_stats, old_strings, old_bytes = dex_summary(reference)
         new_stats, new_strings, new_bytes = dex_summary(built)
