@@ -74,17 +74,29 @@ docker run --rm --user vagrant --env HOME=/home/vagrant \
   --entrypoint /bin/bash "$IMAGE" -ec '
     . /etc/profile
     export HOME=/home/vagrant
-    for candidate in "${ANDROID_HOME:-}" "${ANDROID_SDK_ROOT:-}" \
-        /opt/android-sdk /usr/lib/android-sdk /home/vagrant/Android/Sdk; do
-      if [[ -n "$candidate" && -d "$candidate/platforms/android-34" ]]; then
-        export ANDROID_HOME="$candidate"
-        break
-      fi
-    done
-    [[ -n "${ANDROID_HOME:-}" && -d "$ANDROID_HOME/platforms/android-34" ]] ||
-      { echo "STOP: Android SDK 34 unavailable inside container"; exit 1; }
+    # The official F-Droid buildserver image can start with an EMPTY
+    # Android SDK. Provision API 34 and build-tools 34 INSIDE this
+    # ephemeral container; never modify the SDK on the Mint host.
+    export ANDROID_HOME=/opt/android-sdk
+    [[ -d "$ANDROID_HOME" && -w "$ANDROID_HOME" ]] ||
+      { echo "STOP: F-Droid Android SDK is not writable"; exit 1; }
+    command -v sdkmanager >/dev/null ||
+      { echo "STOP: sdkmanager unavailable in F-Droid container"; exit 1; }
+    echo "===== PROVISION SDK IN ISOLATED CONTAINER ====="
+    if [[ ! -f "$ANDROID_HOME/platforms/android-34/android.jar" ||
+          ! -d "$ANDROID_HOME/build-tools/34.0.0" ]]; then
+      # Do not auto-accept SDK licences. sdkmanager must stop if
+      # previously accepted licences do not cover these packages.
+      sdkmanager --sdk_root="$ANDROID_HOME" \
+        "platforms;android-34" "build-tools;34.0.0" "platform-tools" ||
+        { echo "STOP: SDK installation failed; inspect network/licences"; exit 1; }
+    fi
+    [[ -f "$ANDROID_HOME/platforms/android-34/android.jar" &&
+      -d "$ANDROID_HOME/build-tools/34.0.0" ]] ||
+      { echo "STOP: Required SDK packages unavailable"; exit 1; }
     java -version
     echo "Container Android SDK: $ANDROID_HOME"
+    echo "SDK platform: android-34; build-tools: 34.0.0"
     ./gradlew --no-daemon --no-build-cache --rerun-tasks \
       :app:assembleRelease :controller:assembleRelease \
       :motion-helper:assembleRelease :sms-helper:assembleRelease
