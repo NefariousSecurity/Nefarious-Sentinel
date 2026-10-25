@@ -53,6 +53,45 @@ done <<< "$DATA"
   exit 0
 }
 
+# The private project was already built on this Mint host. Its ignored
+# local.properties can identify the SDK without copying any private data.
+# Only the sdk.dir value is read; keystore properties are never sourced.
+resolve_sdk() {
+  local candidate="" path
+  if [[ -n "${ANDROID_HOME:-}" ]]; then
+    candidate="$ANDROID_HOME"
+  elif [[ -n "${ANDROID_SDK_ROOT:-}" ]]; then
+    candidate="$ANDROID_SDK_ROOT"
+  elif [[ -f "$PRIVATE_APKS/local.properties" ]]; then
+    candidate="$(awk -F= '
+      /^[[:space:]]*sdk[.]dir[[:space:]]*=/ {
+        sub(/^[^=]*=/, "")
+        sub(/^[[:space:]]+/, "")
+        sub(/[[:space:]]+$/, "")
+        print
+        exit
+      }' "$PRIVATE_APKS/local.properties" | tr -d '\r')"
+  fi
+  if [[ -z "$candidate" ]]; then
+    for path in "$HOME/Android/Sdk" "$HOME/android-sdk" \
+                "/opt/android-sdk" "/usr/lib/android-sdk"; do
+      if [[ -d "$path/platforms/android-34" ]]; then
+        candidate="$path"
+        break
+      fi
+    done
+  fi
+  [[ -n "$candidate" && -d "$candidate/platforms/android-34" &&
+     -d "$candidate/build-tools" ]] ||
+    die "Android SDK 34 not found. Set ANDROID_HOME to the SDK directory, then retry."
+  printf '%s\n' "$candidate"
+}
+export ANDROID_HOME="$(resolve_sdk)"
+if [[ -n "${ANDROID_SDK_ROOT:-}" && "$ANDROID_SDK_ROOT" != "$ANDROID_HOME" ]]; then
+  die "ANDROID_SDK_ROOT and ANDROID_HOME disagree; resolve explicitly before building"
+fi
+echo "PASS: Android SDK identified at $ANDROID_HOME (platform android-34 present)"
+
 WORK="$(mktemp -d)"
 # Keep temporary outputs if the comparison fails, so differences are inspectable.
 echo "Building in disposable, unprivileged scratch directory: $WORK"
