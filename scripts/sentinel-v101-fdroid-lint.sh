@@ -52,21 +52,26 @@ echo "F-Droid tools commit: $(cat "$WORK/FDROIDSERVER_COMMIT.txt")"
 cp -- "$WORK/fdroidserver/examples/config.yml" "$WORK/config.yml"
 # Official fdroiddata controls the accepted Categories vocabulary. Without
 # config/categories.yml, fdroid lint rejects even the valid Security category.
-echo "===== FETCH OFFICIAL F-DROID CATEGORIES ====="
+echo "===== FETCH COMPLETE OFFICIAL F-DROID CONFIGURATION ====="
+# F-Droid lint loads localized category/anti-feature YAML and copies
+# their referenced icons (for example config/category_connectivity.png).
+# Pull the COMPLETE fdroiddata config subtree, not only categories.yml.
+git clone --depth=1 --filter=blob:none --sparse \
+  https://gitlab.com/fdroid/fdroiddata.git "$WORK/fdroiddata"
+git -C "$WORK/fdroiddata" sparse-checkout set config
+git -C "$WORK/fdroiddata" rev-parse HEAD > "$WORK/FDROIDDATA_COMMIT.txt"
+[[ -s "$WORK/fdroiddata/config/categories.yml" ]] ||
+  die "Official categories.yml missing"
+[[ -s "$WORK/fdroiddata/config/category_connectivity.png" ]] ||
+  die "Official category icon missing"
 mkdir -p "$WORK/config"
-curl --fail --location --silent --show-error --retry 2 \
-  --connect-timeout 15 --max-time 90 \
-  --proto '=https' --proto-redir '=https' \
-  --output "$WORK/config/categories.yml" \
-  "https://gitlab.com/fdroid/fdroiddata/-/raw/master/config/categories.yml"
-[[ -s "$WORK/config/categories.yml" ]] ||
-  die "Official fdroiddata categories.yml is empty"
+cp -a -- "$WORK/fdroiddata/config/." "$WORK/config/"
 grep -q '^Security:' "$WORK/config/categories.yml" ||
-  die "Security category missing from official categories list"
-grep -q '^System:' "$WORK/config/categories.yml" ||
-  die "System category missing from official categories list"
-sha256sum "$WORK/config/categories.yml" > "$WORK/FDROIDDATA_CATEGORIES_SHA256SUMS"
-echo "PASS: Official fdroiddata categories loaded"
+  die "Official Security category missing"
+sha256sum "$WORK/config/categories.yml" \
+  "$WORK/config/category_connectivity.png" > "$WORK/FDROIDDATA_CATEGORY_ASSETS_SHA256SUMS"
+echo "PASS: Full official fdroiddata config subtree loaded"
+echo "fdroiddata commit: $(cat "$WORK/FDROIDDATA_COMMIT.txt")"
 mkdir -p "$WORK/metadata"
 for pkg in \
   com.nefarioussecurity.sentinel \
