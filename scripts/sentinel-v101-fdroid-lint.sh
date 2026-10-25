@@ -43,6 +43,11 @@ if [[ "$MODE" == --check ]]; then
   exit 0
 fi
 WORK="$(mktemp -d "$BASE/v101-fdroid-lint.XXXXXXXX")"
+echo "===== FETCH F-DROID TOOLING INTO ISOLATED WORKSPACE ====="
+git clone --depth=1 https://gitlab.com/fdroid/fdroidserver.git "$WORK/fdroidserver"
+[[ -x "$WORK/fdroidserver/fdroid" ]] || die "F-Droid CLI absent from fetched source"
+git -C "$WORK/fdroidserver" rev-parse HEAD > "$WORK/FDROIDSERVER_COMMIT.txt"
+echo "F-Droid tools commit: $(cat "$WORK/FDROIDSERVER_COMMIT.txt")"
 mkdir -p "$WORK/metadata"
 for pkg in \
   com.nefarioussecurity.sentinel \
@@ -63,7 +68,9 @@ echo "Workspace: $WORK"
 docker run --rm \
   --user vagrant --env HOME=/home/vagrant \
   --cap-drop=ALL --security-opt=no-new-privileges \
-  --volume "$WORK:/build:rw" --workdir /build \
+  --volume "$WORK:/build:rw" \
+  --volume "$WORK/fdroidserver:/home/vagrant/fdroidserver:ro" \
+  --workdir /build \
   --entrypoint /bin/bash "$IMAGE" -ec '
     . /etc/profile
     export PATH="/home/vagrant/fdroidserver:$PATH"
