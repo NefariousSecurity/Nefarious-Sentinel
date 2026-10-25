@@ -707,6 +707,28 @@ Before connecting the dedicated Pixel 10a, check Sentinel maintenance
 and tamper/wipe protections via existing trusted on-device controls;
 USB/ADB connections themselves may be safety-relevant for Sentinel.
 
+## Pixel 10a development-device v1.0.0 upgrade baseline, 25 October 2026
+
+A serial-targeted, read-only ADB inspection identified the intended
+development **Pixel 10a / stallion**. All four installed Sentinel packages
+were **v1.0.0 / versionCode 4**, and `dumpsys device_policy`
+reported the Sentinel Core component
+`com.nefarioussecurity.sentinel/com.localruntime.core.admin.DeviceAdminReceiver`
+as the current **Android Device Owner**.
+
+**No APK was installed or upgraded**, no package data or Android device
+policy was changed, and no destructive tests were attempted.
+The Android Device Owner status is a crucial upgrade-compatibility
+constraint; do not remove Core, reset the device, or update a
+different phone as part of candidate acceptance.
+
+The commands do not establish the current armed state of USB host
+protection, debugging/tamper checks, Dead Man's Switch, SMS wipe,
+Maintenance Mode or beta re-arm state. These need **on-device**
+verification through the existing Controller before any installation.
+The development device's hardware serial is deliberately omitted
+from this public status document.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
