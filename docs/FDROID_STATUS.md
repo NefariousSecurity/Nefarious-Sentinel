@@ -1060,6 +1060,46 @@ environment to build the remaining three in one isolated container
 and checks per-app success plus all three signed upstream
 reference comparisons. **Those three builds are pending.**
 
+## Four of four official F-Droid v1.0.1 recipe builds VERIFIED, 25 October 2026
+
+The final three Android packages all completed successful official
+`fdroid build --test --stop --no-tarball` builds inside the
+F-Droid buildserver image on the Mint workstation, using the same
+fdroidserver and fdroiddata configuration revisions as the
+previous Core validation. The F-Droid runner cloned exact public
+upstream source commit `10a5324be20cf1fe8714b9edce030f607749c10c`
+for **SMS, Motion and Controller**. For each, it reported:
+- `Successfully built ... :5`
+- downloaded the corresponding *public* signed GitHub `v1.0.1` APK;
+- `...successfully verified`;
+- `compared built binary to supplied reference binary successfully`;
+- allowed signer SHA-256
+  `46520e33367a8f8c65980e98a06df9091e6dfa65b157ddf78d4fdbd9d97beeb7`.
+
+Runner summary: `3 builds succeeded`. The independent
+wrapper's post-run evidence audit confirmed individual success
+records and exactly three signed APK comparisons.
+
+Full log:
+`~/Projects/fdroid-sentinel-validation/v101-fdroid-recipe-remaining.eAhW5OpK/build.log`
+
+Previously: official **Core** recipe also built successfully
+and compared with the public developer-signed Core APK using its
+allowed signer
+(`v101-fdroid-recipe-core.kILvzx3H/build.log`).
+
+**Official fdroidserver recipe build and signed binary verification:
+PASS, 4/4** (Core, Controller, Motion, SMS).
+
+**Outstanding nontechnical gate:** Prepare and submit new-app
+metadata in the official `fdroid/fdroiddata` GitLab project.
+The current 2026 new-app MR checklist specifically requests
+**one app per merge request**. Therefore prepare four separate
+MRs, each containing exactly one `metadata/<applicationId>.yml`
+file and referencing shared GitHub source/release evidence.
+Public GitHub v1.0.1 release and source tag must remain unchanged.
+No official fdroiddata MR is claimed to have been submitted.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
