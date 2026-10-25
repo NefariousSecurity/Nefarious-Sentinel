@@ -14,7 +14,7 @@ done
 PRIVATE="$HOME/Projects/oblivion-v2"
 BASE="$HOME/Projects/fdroid-sentinel-validation"
 FIRST="$BASE/v101-clean.Fc2Z6qIm/src"
-COMMIT="cd76b4b"
+COMMIT="ccd6c1419440acc49d8909af4049c6482f77442e"
 IMAGE="registry.gitlab.com/fdroid/fdroidserver:buildserver"
 
 [[ -d "$PRIVATE/.git" && -d "$FIRST" ]] || die "Expected private source or Mint reference missing"
