@@ -566,6 +566,29 @@ with the same release key; keep original v1.0.0 Git tag and APK assets
 unaltered. Regression tests, signature compatibility and signing-key
 security remain separate required gates.
 
+## v1.0.1 pre-signing identity and original signer verification PASS, 25 October 2026
+
+Read-only pre-signing check passed for all four APK modules in both the
+clean Mint and final F-Droid container build directories:
+- `aapt dump badging` package IDs unchanged across releases.
+- Version name `1.0.1`, version code `5` for Core, Controller,
+  Motion and SMS.
+- All eight inspected unsigned APK paths matched the previously recorded
+  and independently reproducible SHA-256 hashes.
+- The container's `SOURCE_COMMIT.txt` identified final private source
+  `ccd6c1419440acc49d8909af4049c6482f77442e`.
+- All four original v1.0.0 developer-signed reference APKs passed
+  pinned-file SHA-256 and `apksigner verify --print-certs`, retaining
+  the expected certificate identity
+  `46520e33367a8f8c65980e98a06df9091e6dfa65b157ddf78d4fdbd9d97beeb7`.
+
+**Not done yet:** Verify secure access to the existing private signing
+key without disclosing credentials; sign new v1.0.1 release artifacts
+without overwriting any v1.0.0 reference; verify signed binary
+reproducibility and cert continuity; conduct safe non-destructive
+on-device upgrade regression tests; publish the matching public source
+tag and new release only after all acceptance gates pass.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
