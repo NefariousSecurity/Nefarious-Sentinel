@@ -729,6 +729,35 @@ verification through the existing Controller before any installation.
 The development device's hardware serial is deliberately omitted
 from this public status document.
 
+## Public v1.0.1 source and F-Droid preparation branch, 25 October 2026
+
+Created public GitHub branch `release/v1.0.1-fdroid-prep` based on
+`main`, while keeping `v1.0.0` tag and release assets unchanged.
+
+The preparation branch:
+- Updates the public Gradle source version to `1.0.1` /
+  `versionCode 5` and the Core stable release unit-test expectation
+  to those values. These two *file blobs* were compared to the
+  private `release/v1.0.1-rc1` counterparts and confirmed **identical**.
+- Updates all four F-Droid metadata drafts to source tag
+  `v1.0.1` with `versionCode 5`, retains the original signing
+  certificate pin and upstream `Binaries` URLs, and intentionally
+  keeps each build **disabled** pending publication and recipe tests.
+- Adds per-package Fastlane changelog `5.txt` files.
+- Adds `scripts/sentinel-v101-public-source-verify.sh` with
+  read-only `--check` and isolated source-rebuild `--run`
+  modes. The latter compares four public-source-rebuilt unsigned
+  APKs with the verified signed v1.0.1 staging using
+  `apksigcopier compare --unsigned`.
+
+**This is only a prep branch**, not yet a tagged or published v1.0.1
+release. The public source build comparison must pass first;
+non-destructive on-device upgrade acceptance remains separate.
+No official F-Droid merge request has yet been opened, and
+`fdroiddata` cannot verify final `Binaries` until the matching
+signed APK release is published. Do not use the existing v1.0.0-specific
+F-Droid buildserver diagnostic as evidence of v1.0.1 acceptance.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
