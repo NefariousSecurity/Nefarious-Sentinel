@@ -589,6 +589,23 @@ reproducibility and cert continuity; conduct safe non-destructive
 on-device upgrade regression tests; publish the matching public source
 tag and new release only after all acceptance gates pass.
 
+## v1.0.1 signing configuration pre-flight PASS, 25 October 2026
+
+A local, read-only Python check of the private release checkout
+`~/Projects/oblivion-v2` verified that `keystore.properties`
+exists and is Git-ignored, all expected signing properties are present,
+and `storeFile` resolves for Core, Controller, Motion and SMS to the
+**same existing keystore**. Both the keystore and properties file are
+owned by the local user and their permission bits do not grant
+group/other access.
+
+**No private key material or passwords were printed**, and no APK was
+signed. The certificate for the configured keystore alias has **not yet
+been compared** with the original v1.0.0 APK signer. That cryptographic
+certificate identity check is the immediate remaining gate before
+release-signing preparation. This pre-flight does not independently
+verify that the key-entry password will work during signing.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
