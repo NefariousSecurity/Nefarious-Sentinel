@@ -1,0 +1,1 @@
+Sentinel SMS Service 1.0.1 (code 5): maintenance version aligned with Core and Controller. No intended SMS-handling behavior changes. Real carrier SMS ingress remains unverified.
