@@ -1029,6 +1029,37 @@ The `--stop` switch makes failures fatal, and the app ID with
 change application metadata, release assets or device settings.
 **Actual F-Droid recipe build and signed binary match remain pending.**
 
+## Official F-Droid Core v1.0.1 build and signed reference check PASS, 25 October 2026
+
+The developer reran the official Core recipe in the F-Droid buildserver
+Docker image using `fdroid build --test --stop --no-tarball
+com.nefarioussecurity.sentinel:5`, with an independently cloned,
+verified fdroidserver and fdroiddata lint configuration. The build
+checked out public source commit
+`10a5324be20cf1fe8714b9edce030f607749c10c`,
+removed release signing configuration, scanned source, and
+**successfully compiled** Core versionCode 5.
+
+Crucially, fdroidserver itself fetched the published developer-signed
+`Nefarious-Sentinel-Core-v1.0.1.apk` upstream `Binaries` URL,
+reported **"compared built binary to supplied reference binary
+successfully"**, verified the allowed signer SHA-256
+`46520e33367a8f8c65980e98a06df9091e6dfa65b157ddf78d4fdbd9d97beeb7`,
+and concluded **`1 build succeeded`**.
+
+**Actual F-Droid recipe + signed Binaries comparison PASS: Core (1/4).**
+Log:
+`~/Projects/fdroid-sentinel-validation/v101-fdroid-recipe-core.kILvzx3H/build.log`.
+
+The public metadata drafts remain disabled and official fdroiddata
+has not received a submission. To complete the same validation for
+Controller, Motion and SMS, added
+`scripts/sentinel-v101-fdroid-recipe-remaining.sh` on the public
+preparation branch. It uses the already validated official lint
+environment to build the remaining three in one isolated container
+and checks per-app success plus all three signed upstream
+reference comparisons. **Those three builds are pending.**
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
