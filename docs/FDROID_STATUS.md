@@ -348,6 +348,33 @@ developer-signed release built from clean source and verify it before
 publication. A version replacement would need a deliberate release process
 and versionCode increase, and must retain compatible signing identities.
 
+## Original private build artifact provenance, 25 October 2026
+
+A read-only comparison of Controller Kotlin `.class` artifacts from:
+1. `~/Projects/oblivion-v2` (private original build),
+2. the earlier Mint tagged-source rebuild,
+3. a new no-Gradle-cache Mint tagged-source compilation, and
+4. the F-Droid container tagged-source compilation
+
+found exactly **453 classes in each output tree**. The original private
+project matched the earlier Mint rebuild in all 453 classes. It differed
+from both fresh Mint and F-Droid in the **same 10 classes**. Fresh Mint
+and F-Droid matched in all 453 classes.
+
+This confirms that the original published Controller's bytecode corresponds
+to the private project's retained output and that the earlier matching
+tagged-source rebuild does **not** establish independent clean-build
+reproducibility. A cache or incremental compilation issue, build inputs not
+captured in the tag, or compiler nondeterminism are hypotheses. The exact
+historical cause is not established.
+
+**Next:** compare the two affected *current private working-tree source*
+files and Gradle configuration files with the immutable public tag,
+including staged/unstaged changes. Also inspect relevant Git history and
+build logs if available. Do not assume that an identical current working
+tree proves the source was identical when the original APK was built.
+Do not change v1.0.0 tag or signed release assets to force a match.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
