@@ -916,6 +916,33 @@ existing tag with the four verified signed APKs and matching
 downloaded assets before making the release public, then test
 final F-Droid upstream `Binaries` URLs and metadata.
 
+## Draft v1.0.1 uploaded GitHub assets independently verified, 25 October 2026
+
+An existing GitHub **draft, prerelease** for `v1.0.1` was found
+under release ID `423306616` in
+`NefariousSecurity/Nefarious-Sentinel`; the release was not publicly
+published at this stage. It contained precisely five uploaded assets:
+`Nefarious-Sentinel-{Core,Controller,Motion,SMS}-v1.0.1.apk`
+and `SHA256SUMS.txt`.
+
+The operator verified the release's source Git tag resolved to
+`10a5324be20cf1fe8714b9edce030f607749c10c`,
+downloaded all five draft assets to an isolated protected local
+directory `~/Projects/fdroid-sentinel-validation/v101-github-draft-verify.kpf87gt6`,
+and successfully executed:
+
+- `sha256sum -c SHA256SUMS.txt`: **all four APKs OK**.
+- `cmp` each downloaded APK with its original signed staging copy:
+  **Core PASS, Controller PASS, Motion PASS, SMS PASS**.
+- `cmp` downloaded checksum manifest with original stage manifest:
+  **PASS**.
+- Exactly five downloaded files: **PASS**.
+
+**Draft asset-download integrity gate: PASS.** The draft's
+release-note body and final publication controls still need to be
+reviewed before making it public. F-Droid metadata recipes remain
+disabled, and no official F-Droid merge request has been submitted.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
