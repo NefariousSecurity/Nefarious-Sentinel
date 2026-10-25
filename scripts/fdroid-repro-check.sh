@@ -14,7 +14,7 @@ ROOT="$(git rev-parse --show-toplevel)"
 [[ -d "$ROOT/.git" ]] || die "Run from cloned public Sentinel repository"
 [[ "$(git -C "$ROOT" rev-parse --verify refs/tags/v1.0.0^{commit})" ]] ||
     die "v1.0.0 public tag not found"
-[[ "$(git -C "$ROOT" remote get-url origin)" == *"Nefarious-Sentinel-Releases"* ]] ||
+[[ "$(git -C "$ROOT" remote get-url origin)" == *"Nefarious-Sentinel"* ]] ||
     die "Expected public Sentinel source clone"
 
 PRIVATE_APKS="${SENTINEL_SIGNED_DIR:-$HOME/Projects/oblivion-v2}"
