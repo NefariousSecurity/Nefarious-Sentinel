@@ -729,6 +729,28 @@ verification through the existing Controller before any installation.
 The development device's hardware serial is deliberately omitted
 from this public status document.
 
+## Public v1.0.1 release candidate reproducibility PASS, 25 October 2026
+
+On Mint, running `bash scripts/sentinel-v101-public-source-verify.sh --run`
+against public source commit
+`10a5324be20cf1fe8714b9edce030f607749c10c` completed
+successfully. **251/251 Gradle tasks executed**, producing four unsigned
+v1.0.1 APKs from the public source in an isolated build workspace
+`~/Projects/fdroid-sentinel-validation/v101-public-verify.uRbGjVBK`.
+
+The verification script checked SHA-256 identity of all four public
+unsigned builds against the previously independently verified private /
+F-Droid-container unsigned reference digests. It then passed
+`apksigcopier compare --unsigned` for each of the public builds
+against the developer-signed, certificate-verified v1.0.1 APKs:
+**Core PASS, Controller PASS, Motion PASS, SMS PASS**.
+
+**Public-source-to-signed-binary reproducibility gate: PASS.**
+No v1.0.1 APK installation, publication or Git tag has happened.
+Pixel 10a installed-device upgrade and protection-state assessment,
+public v1.0.1 release/tag, live download URL checks and final official
+F-Droid metadata build/merge request remain pending.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
