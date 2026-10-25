@@ -209,6 +209,22 @@ the original host Java/CPU environment to the container; then test
 reproducibility with a targeted, isolated change. Keep the public v1.0.0
 tag, signing identities and published APKs immutable.
 
+## Host versus container toolchain check, 25 October 2026
+
+Mint host and F-Droid container each expose **24 CPUs** on **x86_64**.
+Both report OpenJDK **21.0.12.1** dated 2026-08-18. Mint uses the Ubuntu
+24.04 build `21.0.12.1+1-1-24.04.4-Ubuntu`; the container uses Debian 13
+`21.0.12.1+1-1-deb13u1-Debian`. These are matching *version numbers*,
+not necessarily byte-identical Java packages. No JDK change is justified
+without further evidence.
+
+The read-only `scripts/fdroid-controller-diff.py` now also reports DEX
+header table counts, string-table additions/removals, and the first differing
+non-header byte offsets between the original signed Controller and F-Droid's
+unsigned Controller. This can distinguish changed string pools or table
+sizes from differences in method code or ordering. It does **not** prove
+semantically equivalent bytecode.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
