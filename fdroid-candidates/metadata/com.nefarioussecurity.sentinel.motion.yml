@@ -7,7 +7,7 @@ AuthorName: NefariousSecurity
 WebSite: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases
 SourceCode: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases
 IssueTracker: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/issues
-Summary: Optional motion-event helper for Sentinel Snatch Protection. Works only with
+Summary: Motion helper for Sentinel Snatch Protection
 Description: |-
   Optional motion-event helper for Sentinel Snatch Protection. Works only with matching same-signed Core and Controller.
   
