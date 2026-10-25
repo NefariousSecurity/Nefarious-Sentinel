@@ -1100,6 +1100,32 @@ file and referencing shared GitHub source/release evidence.
 Public GitHub v1.0.1 release and source tag must remain unchanged.
 No official fdroiddata MR is claimed to have been submitted.
 
+## Four GitLab submission YAML candidates staged, 25 October 2026
+
+The developer generated four local F-Droid metadata submission
+candidates from the successfully linted scratch recipes, removing
+the protective draft headers and build-disabling lines. The
+operator confirmed all four package IDs and exact tested source
+commit `10a5324be20cf1fe8714b9edce030f607749c10c`,
+then recorded individual SHA-256 manifest digests for each file.
+
+Protected local preparation folder:
+`~/Projects/fdroid-sentinel-validation/v101-gitlab-submission.4AWJ1WzF/metadata`.
+
+GitLab CLI (`glab`) was **not installed** on Mint. No metadata
+files have yet been uploaded to GitLab, no forks or merge requests
+have been created, and no acceptance from F-Droid is implied.
+
+Prior to creating four separate new-app merge requests,
+F-Droid's current checklist prefers avoiding duplicated Summary/
+Description text when the tagged upstream project already has
+Fastlane text. Its checklist also requests author contact,
+one-app-per-MR, full source hash and an explanation if
+automatic update checking is deliberately disabled. The
+existing four verified recipes use `AutoUpdateMode: None` and
+`UpdateCheckMode: None`, pending a documented coordinated-release
+reason or a checked automated-update policy.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
