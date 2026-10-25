@@ -1,0 +1,72 @@
+name: Bug report
+description: Report a non-sensitive behaviour or compatibility issue in Sentinel.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Security vulnerabilities and exploit details must not be posted here.**
+        Use the repository's private security advisory reporting channel instead.
+        Never publish PINs, phone numbers, serial numbers, package signing keys,
+        logs containing personal information, or destructive proof-of-concept steps.
+        Test potential wipe bugs only on a disposable or independently backed-up device.
+  - type: input
+    id: sentinel-version
+    attributes:
+      label: Sentinel version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - Controller
+        - Core
+        - Motion helper
+        - SMS helper
+        - Installation or upgrade
+        - Documentation
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Installation mode
+      options:
+        - Standard / Device Administrator
+        - Hardened / Device Owner
+        - Not configured
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: android
+    attributes:
+      label: Android / GrapheneOS version and device model
+      placeholder: "Android 17 / Pixel model, no serial numbers"
+    validations:
+      required: true
+  - type: textarea
+    id: behaviour
+    attributes:
+      label: Observed behaviour
+      description: Keep this safe and non-sensitive. Do not trigger a wipe to reproduce.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: checkboxes
+    id: hygiene
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: I have excluded passwords, PINs, serial numbers, phone numbers and private logs.
+          required: true
+        - label: This report does not publicly disclose a security vulnerability or exploit.
+          required: true
