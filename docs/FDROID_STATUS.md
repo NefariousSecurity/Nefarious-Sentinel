@@ -866,6 +866,45 @@ release-note body and final publication controls still need to be
 reviewed before making it public. F-Droid metadata recipes remain
 disabled, and no official F-Droid merge request has been submitted.
 
+## GitHub v1.0.1 signed public prerelease PUBLISHED, 25 October 2026
+
+GitHub release ID `423306616` for
+`NefariousSecurity/Nefarious-Sentinel` / `v1.0.1` was
+published with interactive `PUBLISH` operator confirmation.
+The post-publication REST API returned:
+
+- `draft: false`, `prerelease: true`;
+- `published_at: 2026-10-25T10:13:52Z`;
+- all five expected release assets:
+  `Nefarious-Sentinel-{Core,Controller,Motion,SMS}-v1.0.1.apk`
+  and `SHA256SUMS.txt`;
+- `https://github.com/NefariousSecurity/Nefarious-Sentinel/releases/tag/v1.0.1`.
+
+The Git tag resolves to the reproducibly verified public source
+commit `10a5324be20cf1fe8714b9edce030f607749c10c`
+and remains separate from subsequent release documentation commits.
+The original v1.0.0 release and signed APKs were not changed.
+Before publication, **all five draft assets** were independently
+downloaded via GitHub CLI and exactly matched the protected originals.
+
+**GitHub upstream release: PUBLISHED.**
+**Official F-Droid listing: NOT YET SUBMITTED OR ACCEPTED.**
+
+Remaining:
+1. Re-download the five *published* assets by anonymous HTTPS
+   release-download URLs, verify the manifest, signer and source tag.
+2. Use fdroidserver's `fdroid lint` and actual fdroiddata
+   release build recipe test for all four components.
+3. Prepare official fdroiddata merge request(s) using the tested
+   public source revision and upstream binary URLs, and await review.
+
+F-Droid's build metadata documentation recommends **full source
+commit SHA** rather than a version tag in `Builds.commit`;
+the four draft recipes on public branch
+`release/v1.0.1-fdroid-prep` were therefore pinned to
+`10a5324be20cf1fe8714b9edce030f607749c10c`.
+Each draft remains **disabled** pending fdroidserver testing.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
