@@ -429,6 +429,29 @@ isolated sanitised copy without private keys, then compare artifacts.
 Final `Binaries` + `AllowedAPKSigningKeys` verification needs an actual
 new public source revision and new verified developer-signed APKs.
 
+## v1.0.1 F-Droid container SDK preflight diagnosis, 25 October 2026
+
+The first run of `scripts/fdroid-v101-container-check.sh --run` passed
+source/commit/clean-tree, reference APK, and Docker checks, but stopped
+**before Gradle** with `STOP: Android SDK 34 unavailable inside container`.
+
+A read-only inspection of `registry.gitlab.com/fdroid/fdroidserver:buildserver`
+as user `vagrant` confirmed that `ANDROID_HOME=/opt/android-sdk`,
+that this directory was writable but contained **no platforms or
+build-tools**, and that `/usr/bin/sdkmanager` was available.
+
+The v1.0.1 test runner now provisions explicit packages
+`platforms;android-34`, `build-tools;34.0.0` and `platform-tools`
+with `sdkmanager --sdk_root=/opt/android-sdk` inside the **ephemeral
+container**, prior to invoking Gradle. It checks that Android 34 and
+build tools 34 exist before proceeding. It does **not** change the
+host SDK or automatically accept Android SDK licences; failures in
+network/provisioning/licences must be resolved explicitly.
+
+This SDK preflight failure is **not an APK build or binary comparison
+failure**. Independent F-Droid container compilation remains
+unverified until a new test completes.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
