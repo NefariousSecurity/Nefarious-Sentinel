@@ -249,6 +249,30 @@ trying compiler or baseline-profile workarounds.
 F-Droid discusses R8 optimizer and profile nondeterminism:
 https://f-droid.org/docs/Reproducible_Builds/
 
+## Controller R8 mapping comparison, 25 October 2026
+
+A read-only `mapping.txt` comparison between the earlier Mint build and the
+F-Droid build established:
+
+- Mint mapping: 190,853 lines, SHA-256
+  `0fefdb4b5b88a5cff775452a3f4242bd4f45755bf695af438b212df37e24a5c7`.
+- F-Droid mapping: 190,850 lines, SHA-256
+  `00629d2cc790521e0e4443cf440dac3dd4b5c5916873740a204cb1b8fc04454c`.
+- Sorting both maps does not eliminate the discrepancy. Both include the
+  same R8 8.2.4 metadata format, but their `pg-map-id` and
+  `pg-map_hash` fields differ.
+- The visible diff concentrates on line mappings for
+  `SentinelControllerApp(...)` and related Compose operations in
+  `SentinelControllerAppKt`. This is **not evidence that application
+  source changed**, since both builds use the same immutable tag. It is
+  evidence of different build-generated mapping output.
+
+Next isolate whether the *pre-R8 compiled Kotlin* `.class` files differ
+between the Mint build and the F-Droid container. If they match, focus on
+R8 inputs/dependencies and nondeterminism; if not, inspect the Kotlin
+compile pipeline before changing R8. Do not overwrite published APKs,
+immutable tags, or signing material.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
