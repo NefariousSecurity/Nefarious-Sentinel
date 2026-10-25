@@ -27,7 +27,7 @@ Builds:
   - versionName: 1.0.1
     versionCode: 5
     disable: Unpublished v1.0.1 release and final F-Droid recipe verification pending
-    commit: v1.0.1
+    commit: 10a5324be20cf1fe8714b9edce030f607749c10c
     subdir: sms-helper
     gradle:
       - 'yes'
