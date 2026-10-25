@@ -1,0 +1,1 @@
+Sentinel Motion Service 1.0.1 (code 5): maintenance version aligned with Core and Controller. No intended motion-protection behavior changes; existing Sentinel signing identity retained.
