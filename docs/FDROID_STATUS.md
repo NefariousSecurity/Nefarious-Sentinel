@@ -538,6 +538,34 @@ commit to confirm signed-release payload bytes remain unchanged before
 signing and publication. This JVM test success alone is not device
 acceptance testing.
 
+## Final v1.0.1 source commit: F-Droid container comparison PASS, 25 October 2026
+
+A fresh F-Droid buildserver-image run compiled the private release-candidate
+commit `ccd6c1419440acc49d8909af4049c6482f77442e`, which adds only
+the corrected `StableReleaseBuildConfigTest` expectations.
+Build logs show **251 actionable Gradle tasks, all 251 executed** and
+`BUILD SUCCESSFUL`. All four **whole-file SHA-256 hashes** matched the
+preserved first pristine Mint build from `cd76b4b`, demonstrating that
+the intervening test-only commit did not alter any of the candidate
+APK bytes:
+
+- Core: `feab9330016b9b05e095c3ed8fe6159106831f072021ce6d971c40b2fef2121e`
+- Controller: `30d1a4a4ac2ae980ae6d22cc8a99d9b3567aa7e1b1cab887e08c15e8ebb75ba9`
+- Motion: `a01c0518d7d1e4199ef2c5f8d27c7bc02d81eba44698e64037f41736ca5dff09`
+- SMS: `1593dacdd99bcd679240947eb483fc9c92b3fd0b726939d6c5e03fc0af0d508e`
+
+New validated scratch output:
+`~/Projects/fdroid-sentinel-validation/v101-fdroid.6ZBw7rrs`.
+
+**Important distinction:** This confirms the unsigned APK build against
+the F-Droid `buildserver` container image, not the final
+`fdroiddata` metadata / `Binaries` signed-APK check. Before publishing,
+verify version/package identities and the v1.0.0 signing-certificate
+fingerprint, then sign **new artifacts** under controlled conditions
+with the same release key; keep original v1.0.0 Git tag and APK assets
+unaltered. Regression tests, signature compatibility and signing-key
+security remain separate required gates.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
