@@ -647,6 +647,39 @@ pass to the signer via stdin and must never be printed or committed.
 reviewing the output, separately run `--sign`. No phone installation,
 tag creation or publication is performed by either mode.
 
+## Four v1.0.1 APKs signed and verified, 25 October 2026
+
+Running `python3 scripts/sentinel-v101-sign-stage.py --sign` on Mint
+passed all guarded preflight checks, located the existing release
+keystore and alias, and completed release signing for **Core,
+Controller, Motion and SMS**. For each new signed v1.0.1 APK, the
+script successfully checked:
+
+- `apksigner verify --verbose --print-certs` including v2
+  signature and matching pinned SHA-256 certificate
+  `46520e33367a8f8c65980e98a06df9091e6dfa65b157ddf78d4fdbd9d97beeb7`;
+- `aapt dump badging` for the expected unchanged package identity,
+  `versionName=1.0.1` and `versionCode=5`;
+- `apksigcopier compare --unsigned` against **both** the
+  verified pristine Mint unsigned build and the final F-Droid-container
+  unsigned build.
+
+The script completed:
+`PASS: Four signed APKs staged and verified`.
+
+Signed release-candidate output and SHA-256 manifest are in the local
+protected directory
+`~/Projects/fdroid-sentinel-validation/v101-signed-stage.e6m4env9`.
+The exact individual *signed* APK SHA-256 hashes have not yet been
+copied into the status document, and an independent read-only audit
+of the staging directory remains pending.
+
+**Not yet done:** Public v1.0.1 source tag, publication of upstream
+signed `Binaries`, final fdroiddata recipe build/compare and
+non-destructive on-device upgrade acceptance testing. v1.0.0 tags
+and signed APKs remain unmodified; do not publish or deploy to a
+daily-use device until acceptance gates are complete.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
