@@ -92,7 +92,7 @@ docker run --rm \
     fdroid readmeta
     fdroid lint com.nefarioussecurity.sentinel
     echo "===== F-DROID LOCAL RECIPE BUILD ====="
-    fdroid build --test --local com.nefarioussecurity.sentinel
+    fdroid build --test --stop --no-tarball com.nefarioussecurity.sentinel:5
     echo "PASS: F-Droid Core metadata build command completed"
   ' 2>&1 | tee "$WORK/build.log"
 
