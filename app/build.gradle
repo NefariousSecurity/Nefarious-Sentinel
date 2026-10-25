@@ -1,0 +1,354 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.kapt'
+    id 'com.google.dagger.hilt.android'
+}
+
+// Load release signing credentials from the non-versioned keystore.properties.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+/*
+ * Core identities are selected explicitly at build time.
+ *
+ * The default remains the existing Sentinel identity so an ordinary build
+ * cannot accidentally produce a different package and strand an existing
+ * Device Owner installation.
+ *
+ * Example:
+ *   ./gradlew :app:assembleDebug -PcoreIdentity=local01
+ *
+ * Once an identity has been provisioned as Device Owner on a device, all
+ * future upgrades for that device must use the same identity.
+ *
+ * Neutral identities carry a complete user-visible profile rather than only
+ * an application ID and label. This prevents the headless Core from exposing
+ * Sentinel branding through Android's Device Admin setup UI.
+ */
+def coreIdentityPool = [
+    sentinel: [
+        applicationId: "com.nefarioussecurity.sentinel",
+        label: "Nefarious Sentinel",
+        description:
+            "Provides device management for Nefarious Sentinel protection features.",
+        explanation:
+            "Nefarious Sentinel uses Device Admin so enabled protections can lock or wipe this device.",
+    ],
+    local01: [
+        applicationId: "com.localruntime.device.utility",
+        label: "Device Utility",
+        description:
+            "Provides local device configuration and management services.",
+        explanation:
+            "Device administration is required to apply configured device management policies.",
+    ],
+    local02: [
+        applicationId: "com.localruntime.local.utility",
+        label: "Local Utility",
+        description:
+            "Supports local configuration and device service functions.",
+        explanation:
+            "Device administration is required to apply configured local service policies.",
+    ],
+    local03: [
+        applicationId: "com.localruntime.connection.helper",
+        label: "Connection Helper",
+        description:
+            "Supports connection-related device configuration and management.",
+        explanation:
+            "Device administration is required to apply configured connection management policies.",
+    ],
+    local04: [
+        applicationId: "com.localruntime.storage.helper",
+        label: "Storage Helper",
+        description:
+            "Supports local storage configuration and device management.",
+        explanation:
+            "Device administration is required to apply configured storage management policies.",
+    ],
+    local05: [
+        applicationId: "com.localruntime.device.support",
+        label: "Device Support",
+        description:
+            "Provides device support and local management functions.",
+        explanation:
+            "Device administration is required to apply configured device support policies.",
+    ],
+    local06: [
+        applicationId: "com.localruntime.local.support",
+        label: "Local Support",
+        description:
+            "Provides local support and device configuration functions.",
+        explanation:
+            "Device administration is required to apply configured local support policies.",
+    ],
+    local07: [
+        applicationId: "com.localruntime.runtime.utility",
+        label: "Runtime Utility",
+        description:
+            "Supports runtime configuration and local device management.",
+        explanation:
+            "Device administration is required to apply configured runtime management policies.",
+    ],
+    local08: [
+        applicationId: "com.localruntime.background.utility",
+        label: "Background Utility",
+        description:
+            "Provides background device configuration and management services.",
+        explanation:
+            "Device administration is required to apply configured background service policies.",
+    ],
+]
+
+def coreIdentityKey =
+    providers.gradleProperty("coreIdentity")
+        .orElse("sentinel")
+        .get()
+
+def selectedCoreIdentity =
+    coreIdentityPool[coreIdentityKey]
+
+if (selectedCoreIdentity == null) {
+    throw new GradleException(
+        "Unknown coreIdentity '${coreIdentityKey}'. Valid identities: " +
+            coreIdentityPool.keySet().sort().join(", ")
+    )
+}
+
+logger.lifecycle(
+    "Core identity: ${coreIdentityKey} -> " +
+        "${selectedCoreIdentity.applicationId} " +
+        "(${selectedCoreIdentity.label})"
+)
+
+android {
+    namespace 'com.localruntime.core'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId selectedCoreIdentity.applicationId
+
+        minSdk 26
+
+        /*
+         * Android 14 targeting is enabled after the dedicated API-34
+         * compatibility and security regression pass.
+         */
+        targetSdk 34
+
+        versionCode rootProject.ext.sentinelVersionCode
+        versionName rootProject.ext.sentinelVersionName
+
+        buildConfigField(
+            "boolean",
+            "BETA_BUILD",
+            "${rootProject.ext.sentinelIsBeta}"
+        )
+
+        buildConfigField(
+            "String",
+            "BUILD_CHANNEL",
+            "\"${rootProject.ext.sentinelBuildChannel}\""
+        )
+
+        buildConfigField(
+            "long",
+            "BETA_EXPIRY_EPOCH_MS",
+            "${rootProject.ext.sentinelBetaExpiryEpochMs}L"
+        )
+
+        buildConfigField(
+            "String",
+            "BETA_EXPIRY_DISPLAY",
+            "\"${rootProject.ext.sentinelBetaExpiryDisplay}\""
+        )
+
+        manifestPlaceholders = [
+            coreAppLabel: selectedCoreIdentity.label
+        ]
+
+        /*
+         * These resources are generated from the selected identity profile.
+         * They intentionally do not live in values/strings.xml so a neutral
+         * Core cannot accidentally inherit Sentinel-specific wording.
+         */
+        resValue(
+            "string",
+            "device_admin_description",
+            selectedCoreIdentity.description
+        )
+
+        resValue(
+            "string",
+            "standard_admin_explanation",
+            selectedCoreIdentity.explanation
+        )
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(
+                keystoreProperties['storeFile'] ?:
+                    '../../anonymous_key.keystore'
+            )
+            storePassword keystoreProperties['storePassword'] ?: ''
+            keyAlias keystoreProperties['keyAlias'] ?: 'anonymous'
+            keyPassword keystoreProperties['keyPassword'] ?: ''
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
+
+        release {
+            minifyEnabled true
+            shrinkResources true
+
+            proguardFiles(
+                getDefaultProguardFile(
+                    'proguard-android-optimize.txt'
+                ),
+                'proguard-rules.pro'
+            )
+
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    packaging {
+        resources {
+            excludes += [
+                'META-INF/DEPENDENCIES',
+                'META-INF/LICENSE',
+                'META-INF/LICENSE.txt',
+                'META-INF/license.txt',
+                'META-INF/NOTICE',
+                'META-INF/NOTICE.txt',
+                'META-INF/notice.txt',
+                'META-INF/*.kotlin_module',
+                '/META-INF/{AL2.0,LGPL2.1}',
+            ]
+        }
+    }
+}
+
+/*
+ * Neutral Core release builds must not expose Sentinel/Nefarious/Oblivion
+ * branding through user-visible Android resources.
+ *
+ * The check covers both the selected generated identity text and source XML
+ * resources. The legacy "sentinel" identity is intentionally exempt.
+ */
+def forbiddenNeutralCoreTerms = [
+    "sentinel",
+    "nefarious",
+    "oblivion",
+]
+
+tasks.register("verifyNeutralCoreBranding") {
+    group = "verification"
+    description =
+        "Fails neutral Core release builds if branded user-visible text remains."
+
+    doLast {
+        if (coreIdentityKey == "sentinel") {
+            return
+        }
+
+        def violations = []
+
+        def selectedProfileText = [
+            selectedCoreIdentity.label,
+            selectedCoreIdentity.description,
+            selectedCoreIdentity.explanation,
+        ].join("\n").toLowerCase(java.util.Locale.ROOT)
+
+        forbiddenNeutralCoreTerms.each { term ->
+            if (selectedProfileText.contains(term)) {
+                violations.add(
+                    "selected identity profile contains '${term}'"
+                )
+            }
+        }
+
+        fileTree("src/main/res") {
+            include "**/*.xml"
+        }.files.sort().each { resourceFile ->
+            def resourceText =
+                resourceFile
+                    .getText("UTF-8")
+                    .toLowerCase(java.util.Locale.ROOT)
+
+            forbiddenNeutralCoreTerms.each { term ->
+                if (resourceText.contains(term)) {
+                    violations.add(
+                        "${resourceFile}: contains '${term}'"
+                    )
+                }
+            }
+        }
+
+        if (!violations.isEmpty()) {
+            throw new GradleException(
+                "Neutral Core branding verification failed:\n - " +
+                    violations.join("\n - ")
+            )
+        }
+    }
+}
+
+/*
+ * Apply the branding guard automatically to release builds while allowing
+ * ordinary source inspection and debug work to remain independent.
+ */
+tasks.configureEach { task ->
+    if (task.name == "preReleaseBuild") {
+        task.dependsOn("verifyNeutralCoreBranding")
+    }
+}
+
+dependencies {
+    implementation project(':management-api')
+    implementation project(':helper-api')
+
+    // Core Android support used by foreground-service notifications and helpers.
+    implementation 'androidx.core:core-ktx:1.12.0'
+
+    // Hilt dependency injection used by the Core application and SMS receiver.
+    implementation 'com.google.dagger:hilt-android:2.50'
+    kapt 'com.google.dagger:hilt-compiler:2.50'
+
+    // EncryptedSharedPreferences used by existing Core configuration storage.
+    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+
+    // Tests.
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}

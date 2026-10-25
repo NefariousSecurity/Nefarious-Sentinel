@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        device_admin_description and standard_admin_explanation are generated
+        from the selected Core identity profile in app/build.gradle.
+    -->
+    <string name="device_admin_disable_warning">Device management is required for configured local policies.</string>
+    <string name="usb_channel_name">Background Service</string>
+    <string name="usb_channel_desc">Background service status.</string>
+</resources>

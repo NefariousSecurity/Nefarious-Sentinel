@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Policies declared for the local DeviceAdminReceiver.
+
+  - <wipe-data />:
+    Required by DevicePolicyManager.wipeData().
+
+  - <watch-login />:
+    Required by setMaximumFailedPasswordsForWipe().
+    Without this policy, Android throws a SecurityException stating that
+    the admin did not specify the watch-login policy.
+
+  - <force-lock />:
+    Required by DevicePolicyManager.lockNow().
+    This permits the motion protection path to lock the screen without
+    rebooting or wiping the device.
+-->
+<device-admin>
+    <uses-policies>
+        <wipe-data />
+        <watch-login />
+        <force-lock />
+    </uses-policies>
+</device-admin>

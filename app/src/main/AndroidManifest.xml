@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <queries>
+        <intent>
+            <action android:name="com.runtimebridge.action.BIND_MOTION_HELPER_CONTROL_V1" />
+        </intent>
+        <intent>
+            <action android:name="com.runtimebridge.action.REQUEST_MOTION_SENSOR_PERMISSION_V1" />
+        </intent>
+        <intent>
+            <action android:name="com.runtimebridge.action.REQUEST_SMS_RECEIVE_PERMISSION_V1" />
+        </intent>
+        <intent>
+            <action android:name="com.runtimebridge.action.BIND_SMS_HELPER_CONTROL_V1" />
+        </intent>
+    </queries>
+
+    <!-- Device policy support is required by the Device Owner Core. -->
+    <uses-feature
+        android:name="android.software.device_admin"
+        android:required="false" />
+
+    <!-- Foreground services and reboot restoration used by USB and Dead Man. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="com.runtimebridge.permission.MOTION_HELPER_CONTROL_V1" />
+    <uses-permission android:name="com.runtimebridge.permission.SMS_HELPER_CONTROL_V1" />
+
+    <!-- Notifications are used by foreground services and USB status. -->
+
+    <!--
+        Exact alarms are currently shared infrastructure.
+
+        USB Maintenance and Dead Man require exact-alarm scheduling.
+        USE_EXACT_ALARM provides that non-revocable scheduling capability.
+    -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
+    <!--
+        Private Core/Controller IPC permission.
+
+        Android grants signature permissions only to applications signed with
+        the same signing certificate as the application defining the permission.
+    -->
+    <permission
+        android:name="com.runtimebridge.permission.CONTROL_V1"
+        android:protectionLevel="signature" />
+
+    <!--
+        Motion Helper -> Core event permission.
+        Only same-signed helper packages may submit motion candidates.
+    -->
+    <permission
+        android:name="com.runtimebridge.permission.MOTION_EVENTS_V1"
+        android:protectionLevel="signature" />
+
+    <!--
+        SMS Helper -> Core event permission.
+        Only same-signed helper packages may submit raw SMS sender/body events.
+    -->
+    <permission
+        android:name="com.runtimebridge.permission.SMS_EVENTS_V1"
+        android:protectionLevel="signature" />
+
+    <application
+        android:name=".RuntimeApplication"
+        android:allowBackup="false"
+        android:label="${coreAppLabel}"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.RuntimeCore"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        tools:targetApi="34">
+
+        <!--
+            Device Owner policy receiver.
+
+            Android's Device Owner / DPC model still requires a
+            DeviceAdminReceiver component registered with DevicePolicyManager.
+        -->
+        <receiver
+            android:name=".admin.DeviceAdminReceiver"
+            android:description="@string/device_admin_description"
+            android:exported="true"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Direct-Boot-aware USB data probe service. -->
+        <service
+            android:name=".usb.UsbDataProbeService"
+            android:directBootAware="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="usb_data_host_logging_probe" />
+        </service>
+
+        <!--
+            Restores the Direct-Boot-aware USB detector after boot or Core
+            package replacement.
+        -->
+        <receiver
+            android:name=".usb.UsbDataProbeBootReceiver"
+            android:directBootAware="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <!--
+            USB Maintenance exact-alarm expiry receiver.
+
+            Direct Boot aware because the alarm infrastructure uses Device
+            Protected Storage. Maintenance Mode is deliberately cleared at
+            LOCKED_BOOT_COMPLETED and is not restored across reboot.
+
+            This receiver expires the temporary Maintenance policy.
+        -->
+        <receiver
+            android:name=".usb.UsbMaintenanceAlarmReceiver"
+            android:enabled="true"
+            android:directBootAware="true"
+            android:exported="false" />
+
+        <!--
+            Dead Man exact-alarm receiver.
+
+            Direct Boot aware so a persisted deadline can be handled before
+            the first user unlock after reboot.
+        -->
+        <receiver
+            android:name=".deadman.DeadmanAlarmReceiver"
+            android:enabled="true"
+            android:directBootAware="true"
+            android:exported="false" />
+
+        <!--
+            Dead Man foreground monitor for successful device unlocks.
+
+            Direct Boot aware so it can be started before the first user
+            unlock.
+        -->
+        <service
+            android:name=".deadman.DeadmanUnlockService"
+            android:enabled="true"
+            android:directBootAware="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="deadman_unlock_monitor" />
+        </service>
+
+        <!--
+            Restores the persisted Dead Man deadline after reboot or Core
+            package replacement.
+
+            Direct Boot aware so restoration can occur before the first user
+            unlock.
+        -->
+        <receiver
+            android:name=".deadman.DeadmanBootReceiver"
+            android:enabled="true"
+            android:directBootAware="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <!--
+            Signature-protected setup relay for Standard mode.
+
+            There is deliberately no launcher entry. The trusted Controller
+            discovers this Activity through neutral runtime-bridge actions and
+            Android shows the system Device Admin / runtime-permission UI.
+        -->
+        <activity
+            android:name=".setup.StandardSetupActivity"
+            android:enabled="true"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:permission="com.runtimebridge.permission.CONTROL_V1"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+            <intent-filter>
+                <action android:name="com.runtimebridge.action.SETUP_ADMIN_V1" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.runtimebridge.action.REQUEST_SMS_PERMISSION_V1" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.runtimebridge.action.REQUEST_SENSOR_PERMISSION_V1" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            Same-signed Motion Helper -> Core candidate sink.
+
+            The helper performs sensor classification only. Core remains
+            authoritative for enabled state and Lock/Reboot execution.
+        -->
+        <service
+            android:name=".motionbridge.MotionEventSinkService"
+            android:enabled="true"
+            android:directBootAware="true"
+            android:exported="true"
+            android:permission="com.runtimebridge.permission.MOTION_EVENTS_V1">
+            <intent-filter>
+                <action android:name="com.runtimebridge.action.BIND_MOTION_EVENTS_V1" />
+            </intent-filter>
+        </service>
+
+        <!--
+            Isolated SMS Helper -> Core candidate endpoint.
+
+            Binding requires Core's same-signature SMS_EVENTS permission.
+            Binder methods also verify the caller signing certificate.
+        -->
+        <service
+            android:name=".smsbridge.SmsEventSinkService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="com.runtimebridge.permission.SMS_EVENTS_V1">
+            <intent-filter>
+                <action android:name="com.runtimebridge.action.BIND_SMS_EVENTS_V1" />
+            </intent-filter>
+        </service>
+
+        <!--
+            Headless management bridge.
+
+            The action is intentionally independent of the Core package name so
+            the temporary Controller can discover a provisioned Core without
+            knowing which build-time identity was selected.
+        -->
+        <service
+            android:name=".management.CoreManagementService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="com.runtimebridge.permission.CONTROL_V1">
+            <intent-filter>
+                <action android:name="com.runtimebridge.action.BIND_V1" />
+            </intent-filter>
+        </service>
+
+    </application>
+</manifest>

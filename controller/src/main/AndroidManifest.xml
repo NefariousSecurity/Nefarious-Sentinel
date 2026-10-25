@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission
+        android:name="com.runtimebridge.permission.CONTROL_V1" />
+
+    <uses-permission
+        android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+
+    <!--
+        Narrow package visibility to implementations of the management protocol.
+        The Controller never needs QUERY_ALL_PACKAGES.
+    -->
+    <queries>
+        <intent>
+            <action android:name="com.runtimebridge.action.BIND_V1" />
+        </intent>
+        <intent>
+            <action android:name="com.runtimebridge.action.SETUP_ADMIN_V1" />
+        </intent>
+        <intent>
+            <action android:name="com.runtimebridge.action.REQUEST_SMS_PERMISSION_V1" />
+        </intent>
+    </queries>
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+    </application>
+
+</manifest>

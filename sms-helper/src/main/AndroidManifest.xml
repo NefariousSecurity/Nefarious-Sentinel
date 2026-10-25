@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Helper discovers the neutral same-signed Core SMS event sink later.
+        No Core package name is embedded here.
+    -->
+    <queries>
+        <intent>
+            <action android:name="com.runtimebridge.action.BIND_SMS_EVENTS_V1" />
+        </intent>
+    </queries>
+
+    <!-- Dangerous runtime permission deliberately isolated from Core UID. -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
+    <!-- Core defines this signature permission for Helper -> Core delivery. -->
+    <uses-permission android:name="com.runtimebridge.permission.SMS_EVENTS_V1" />
+
+    <!-- SMS Helper defines this permission for Core -> Helper setup control. -->
+    <permission
+        android:name="com.runtimebridge.permission.SMS_HELPER_CONTROL_V1"
+        android:protectionLevel="signature" />
+
+    <application
+        android:allowBackup="false"
+        android:label="${smsHelperLabel}"
+        android:supportsRtl="true">
+
+        <activity
+            android:name=".SmsPermissionActivity"
+            android:enabled="true"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:permission="com.runtimebridge.permission.SMS_HELPER_CONTROL_V1"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+            <intent-filter>
+                <action android:name="com.runtimebridge.action.REQUEST_SMS_RECEIVE_PERMISSION_V1" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            Lifecycle-only Core -> SMS Helper control service.
+
+            No SMS configuration or wipe authority is exposed here.
+        -->
+        <service
+            android:name=".SmsHelperControlService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="com.runtimebridge.permission.SMS_HELPER_CONTROL_V1">
+            <intent-filter>
+                <action android:name="com.runtimebridge.action.BIND_SMS_HELPER_CONTROL_V1" />
+            </intent-filter>
+        </service>
+
+        <!--
+            Isolated SMS ingress.
+
+            Android delivers SMS_RECEIVED here only when RECEIVE_SMS has been
+            granted to this Helper package. Sender/keyword policy and wipe
+            authority remain exclusively in Core.
+        -->
+        <receiver
+            android:name=".SmsIngressReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter android:priority="999">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

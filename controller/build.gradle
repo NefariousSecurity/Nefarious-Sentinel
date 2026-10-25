@@ -1,0 +1,141 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+android {
+    namespace 'com.nefarioussecurity.sentinel.controller'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.nefarioussecurity.sentinel.controller"
+        minSdk 26
+        targetSdk 34
+        versionCode rootProject.ext.sentinelVersionCode
+        versionName rootProject.ext.sentinelVersionName
+
+        buildConfigField(
+            "boolean",
+            "BETA_BUILD",
+            "${rootProject.ext.sentinelIsBeta}"
+        )
+
+        buildConfigField(
+            "String",
+            "BUILD_CHANNEL",
+            "\"${rootProject.ext.sentinelBuildChannel}\""
+        )
+
+        buildConfigField(
+            "long",
+            "BETA_EXPIRY_EPOCH_MS",
+            "${rootProject.ext.sentinelBetaExpiryEpochMs}L"
+        )
+
+        buildConfigField(
+            "String",
+            "BETA_EXPIRY_DISPLAY",
+            "\"${rootProject.ext.sentinelBetaExpiryDisplay}\""
+        )
+
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(
+                keystoreProperties['storeFile']
+                    ?: '../../anonymous_key.keystore'
+            )
+            storePassword keystoreProperties['storePassword'] ?: ''
+            keyAlias keystoreProperties['keyAlias'] ?: 'anonymous'
+            keyPassword keystoreProperties['keyPassword'] ?: ''
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
+
+        release {
+            minifyEnabled true
+
+            proguardFiles(
+                getDefaultProguardFile(
+                    'proguard-android-optimize.txt'
+                )
+            )
+
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    buildFeatures {
+        compose true
+        buildConfig true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.8'
+    }
+
+    packaging {
+        resources {
+            excludes += [
+                'META-INF/DEPENDENCIES',
+                'META-INF/LICENSE',
+                'META-INF/LICENSE.txt',
+                'META-INF/license.txt',
+                'META-INF/NOTICE',
+                'META-INF/NOTICE.txt',
+                'META-INF/notice.txt',
+                'META-INF/*.kotlin_module',
+                '/META-INF/{AL2.0,LGPL2.1}'
+            ]
+        }
+    }
+}
+
+dependencies {
+    implementation project(':management-api')
+
+    testImplementation 'junit:junit:4.13.2'
+
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.activity:activity-compose:1.8.2'
+
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0'
+
+    implementation platform('androidx.compose:compose-bom:2024.02.00')
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.material:material-icons-extended'
+
+    implementation 'androidx.navigation:navigation-compose:2.7.7'
+
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+}

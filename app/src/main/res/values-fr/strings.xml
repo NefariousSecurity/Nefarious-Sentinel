@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        The profile-specific Device Admin description intentionally falls back
+        to the generated default resource so identity rotation is preserved.
+    -->
+    <string name="device_admin_disable_warning">La gestion de l\'appareil est requise pour les règles locales configurées.</string>
+    <string name="usb_channel_name">Service en arrière-plan</string>
+    <string name="usb_channel_desc">État du service en arrière-plan.</string>
+</resources>

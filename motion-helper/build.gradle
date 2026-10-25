@@ -1,0 +1,143 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+/*
+ * Motion Helper identity follows the same -PcoreIdentity selection as Core.
+ *
+ * The helper remains a distinct package/UID. Neutral Core identities receive
+ * corresponding neutral helper identities rather than exposing Sentinel
+ * branding in hardened deployments.
+ */
+def motionHelperIdentityPool = [
+    sentinel: [
+        applicationId: "com.nefarioussecurity.sentinel.motion",
+        label: "Motion Service",
+    ],
+    local01: [
+        applicationId: "com.localruntime.sensor.utility",
+        label: "Sensor Utility",
+    ],
+    local02: [
+        applicationId: "com.localruntime.sensor.support",
+        label: "Sensor Support",
+    ],
+    local03: [
+        applicationId: "com.localruntime.runtime.sensor",
+        label: "Runtime Sensor",
+    ],
+    local04: [
+        applicationId: "com.localruntime.background.sensor",
+        label: "Background Sensor",
+    ],
+    local05: [
+        applicationId: "com.localruntime.device.sensor",
+        label: "Device Sensor",
+    ],
+    local06: [
+        applicationId: "com.localruntime.local.sensor",
+        label: "Local Sensor",
+    ],
+    local07: [
+        applicationId: "com.localruntime.runtime.monitor",
+        label: "Runtime Monitor",
+    ],
+    local08: [
+        applicationId: "com.localruntime.background.monitor",
+        label: "Background Monitor",
+    ],
+]
+
+def coreIdentityKey =
+    providers.gradleProperty("coreIdentity")
+        .orElse("sentinel")
+        .get()
+
+def selectedIdentity =
+    motionHelperIdentityPool[coreIdentityKey]
+
+if (selectedIdentity == null) {
+    throw new GradleException(
+        "Unknown coreIdentity '${coreIdentityKey}'. Valid identities: " +
+            motionHelperIdentityPool.keySet().sort().join(", ")
+    )
+}
+
+logger.lifecycle(
+    "Motion Helper identity: ${coreIdentityKey} -> " +
+        "${selectedIdentity.applicationId} (${selectedIdentity.label})"
+)
+
+android {
+    namespace 'com.runtimebridge.motionhelper'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId selectedIdentity.applicationId
+        minSdk 26
+        targetSdk 34
+        versionCode rootProject.ext.sentinelVersionCode
+        versionName rootProject.ext.sentinelVersionName
+
+        manifestPlaceholders = [
+            motionHelperLabel: selectedIdentity.label
+        ]
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(
+                keystoreProperties['storeFile']
+                    ?: '../../anonymous_key.keystore'
+            )
+            storePassword keystoreProperties['storePassword'] ?: ''
+            keyAlias keystoreProperties['keyAlias'] ?: 'anonymous'
+            keyPassword keystoreProperties['keyPassword'] ?: ''
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
+
+        release {
+            minifyEnabled true
+
+            proguardFiles(
+                getDefaultProguardFile(
+                    'proguard-android-optimize.txt'
+                )
+            )
+
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+}
+
+dependencies {
+    implementation project(':helper-api')
+    implementation 'androidx.core:core-ktx:1.12.0'
+}

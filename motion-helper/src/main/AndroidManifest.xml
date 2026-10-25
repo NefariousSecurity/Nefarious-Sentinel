@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <queries>
+        <intent>
+            <action android:name="com.runtimebridge.action.BIND_MOTION_EVENTS_V1" />
+        </intent>
+    </queries>
+
+    <uses-permission android:name="android.permission.OTHER_SENSORS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Permission defined by Core for Helper -> Core candidate delivery. -->
+    <uses-permission android:name="com.runtimebridge.permission.MOTION_EVENTS_V1" />
+
+    <!-- Permission defined by Helper for Core -> Helper management. -->
+    <permission
+        android:name="com.runtimebridge.permission.MOTION_HELPER_CONTROL_V1"
+        android:protectionLevel="signature" />
+
+    <application
+        android:allowBackup="false"
+        android:label="${motionHelperLabel}"
+        android:supportsRtl="true">
+
+        <activity
+            android:name=".MotionPermissionActivity"
+            android:enabled="true"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:permission="com.runtimebridge.permission.MOTION_HELPER_CONTROL_V1"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+            <intent-filter>
+                <action android:name="com.runtimebridge.action.REQUEST_MOTION_SENSOR_PERMISSION_V1" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".MotionHelperControlService"
+            android:directBootAware="true"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="com.runtimebridge.permission.MOTION_HELPER_CONTROL_V1">
+            <intent-filter>
+                <action android:name="com.runtimebridge.action.BIND_MOTION_HELPER_CONTROL_V1" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".MotionHelperProbeService"
+            android:directBootAware="true"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="motion_sensor_monitor" />
+        </service>
+
+        <receiver
+            android:name=".MotionHelperBootReceiver"
+            android:directBootAware="true"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

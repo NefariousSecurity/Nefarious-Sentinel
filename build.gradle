@@ -1,0 +1,29 @@
+// Top-level build file for Nefarious Sentinel.
+
+plugins {
+    id 'com.android.application' version '8.2.2' apply false
+    id 'com.android.library' version '8.2.2' apply false
+    id 'org.jetbrains.kotlin.android' version '1.9.22' apply false
+    id 'com.google.dagger.hilt.android' version '2.50' apply false
+    id 'org.jetbrains.kotlin.kapt' version '1.9.22' apply false
+}
+
+/*
+ * Sentinel release identity.
+ *
+ * Keep version/channel/expiry metadata centralized here so the four
+ * APKs stay aligned. Stable builds MUST NOT enforce the Beta 1 expiry.
+ * The persisted post-expiry re-arm latch remains in Core for safe upgrades.
+ */
+ext {
+    sentinelVersionCode = 4
+    sentinelVersionName = "1.0.0"
+    sentinelBuildChannel = "STABLE"
+    sentinelIsBeta = false
+    sentinelBetaExpiryEpochMs = 0L
+    sentinelBetaExpiryDisplay = "Not applicable"
+}
+
+tasks.register('clean', Delete) {
+    delete rootProject.buildDir
+}
