@@ -273,6 +273,29 @@ R8 inputs/dependencies and nondeterminism; if not, inspect the Kotlin
 compile pipeline before changing R8. Do not overwrite published APKs,
 immutable tags, or signing material.
 
+## Controller pre-R8 Kotlin class comparison, 25 October 2026
+
+A read-only comparison of the **453** Controller Kotlin `.class` files from
+the earlier Mint build and current F-Droid build found **443 identical** and
+**10 different**. Both builds contain exactly 453 class files. The differences
+cluster in Compose UI classes under
+`controller/ui/SentinelControllerAppKt` and
+`controller/feature/about/AboutScreenKt`.
+
+**Implication:** The input bytecode to R8 is already nonidentical.
+The different R8 mapping and `classes.dex` can be downstream effects.
+R8 cannot be identified as the sole origin of the difference.
+
+The new read-only script
+`python3 scripts/fdroid-controller-class-diff.py` uses the local
+`javap -c -p -s` command on each of the ten different class files, reports
+whether their disassembled instructions differ, and displays a capped diff
+for the main UI Kotlin class. This is a diagnostic, not semantic
+equivalence verification.
+
+Keep the four public F-Droid candidates disabled pending all four
+developer-signed binary verification passes.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
