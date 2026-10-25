@@ -318,6 +318,36 @@ classes in a completely new Mint scratch tree with
 hashes will be compared to the prior Mint and F-Droid outputs.
 This test does not alter the signed release or the source tag.
 
+## Fresh Mint Kotlin compilation confirms cached-build provenance concern, 25 October 2026
+
+A second source checkout was produced from the immutable public source commit
+`4a7c3a55623203116dda4d2aa293baf8c0d608b5` and the Controller Kotlin
+compile task was run with `--no-build-cache --rerun-tasks`.
+Gradle reported 29 tasks, **all 29 executed**.
+
+All three class trees contained exactly 453 Kotlin `.class` files.
+Comparisons reported:
+- Original Mint (previously used to reproduce the published APK) vs F-Droid:
+  **10 differing**.
+- Original Mint vs freshly compiled Mint: **10 differing**.
+- Freshly compiled Mint vs F-Droid: **0 differing**.
+
+The mismatch in the original developer-signed Controller corresponds to
+compile-generated Compose classes that do not match the output of two separate
+fresh build environments. This **strongly suggests** stale/incrementally or
+cached pre-R8 class output in the earlier Mint build, but does not yet
+prove which process supplied it or whether the original source had been
+dirty at build time.
+
+Do NOT alter the immutable v1.0.0 tag or overwrite signed APK assets to
+make F-Droid pass. Next independently repeat the no-build-cache
+Kotlin compilation from a second fresh tagged source extraction and
+confirm that it again matches F-Droid. If a pristine build continues to
+diverge from the published Controller, plan a new coherently versioned,
+developer-signed release built from clean source and verify it before
+publication. A version replacement would need a deliberate release process
+and versionCode increase, and must retain compatible signing identities.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
