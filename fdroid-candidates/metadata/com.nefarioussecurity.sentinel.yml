@@ -7,7 +7,7 @@ AuthorName: NefariousSecurity
 WebSite: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases
 SourceCode: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases
 IssueTracker: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/issues
-Summary: Persistent local security engine. Must be installed with matching Controller
+Summary: Local-first protection Core for Nefarious Sentinel
 Description: |-
   Persistent local security engine. Must be installed with matching Controller and optional helpers. Device Owner is a separately authorised provisioning step.
   
