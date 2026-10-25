@@ -625,6 +625,28 @@ rebuilt unsigned binaries. This proves certificate compatibility,
 not yet installed-device upgrade acceptance or final official
 F-Droid `fdroiddata`/published-`Binaries` verification.
 
+## Guarded v1.0.1 staged signing helper, 25 October 2026
+
+Added `scripts/sentinel-v101-sign-stage.py` to public `main` with
+a read-only `--check` mode and explicit `--sign` mode. The script
+contains **no credentials or private keys**; it runs on the Mint
+workstation and reads the Git-ignored private local
+`keystore.properties` only at execution time.
+
+It pins final source commit `ccd6c14`, all four old signed APK
+SHA-256 references, all four reproducible unsigned APK digests and
+package/version identities, verifies that the shared signing alias's
+certificate matches v1.0.0, and checks restricted signing-file
+ownership/permissions. The `--sign` mode writes four new signed APKs
+to a fresh private staging directory, checks v2 APK signatures and
+common certificate, and compares contents with *both* independent
+unsigned references using `apksigcopier compare --unsigned`. Passwords
+pass to the signer via stdin and must never be printed or committed.
+
+**Signing has not yet been performed.** Run `--check` first; after
+reviewing the output, separately run `--sign`. No phone installation,
+tag creation or publication is performed by either mode.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
