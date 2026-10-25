@@ -225,6 +225,30 @@ unsigned Controller. This can distinguish changed string pools or table
 sizes from differences in method code or ordering. It does **not** prove
 semantically equivalent bytecode.
 
+## Controller DEX table findings, 25 October 2026
+
+Read-only Controller APK diagnostics compared the developer-signed APK with
+F-Droid's rebuilt Controller:
+
+- Both DEX files have 9,413 strings, 3,345 types, 3,572 prototypes,
+  9,120 fields, 13,290 methods and 2,726 class definitions.
+- The sole string-set substitution found was an embedded R8 8.2.4 metadata
+  record: `pg-map-id` was `9f7a658` in the released APK and `e168c74`
+  in the F-Droid rebuild.
+- The released DEX is 2,053,600 bytes; the F-Droid DEX is 2,053,516
+  bytes. Therefore the differing map-id string alone **does not yet explain**
+  the 84-byte difference. `baseline.prof` differs by two bytes.
+- The earlier Mint rebuild matched **all 150 archive members** of the
+  published Controller APK.
+
+Next inspect the R8 `mapping.txt` output from Mint and F-Droid using a
+read-only text comparison. If their contents differ, distinguish
+reordering-only changes from different obfuscation assignments before
+trying compiler or baseline-profile workarounds.
+
+F-Droid discusses R8 optimizer and profile nondeterminism:
+https://f-droid.org/docs/Reproducible_Builds/
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
