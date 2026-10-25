@@ -1,0 +1,39 @@
+# PREPARATORY DRAFT. Do not submit this recipe until independent
+# reproducibility and F-Droid CI verification pass. Build is disabled.
+Categories:
+  - Security
+License: AGPL-3.0-only
+AuthorName: NefariousSecurity
+WebSite: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases
+SourceCode: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases
+IssueTracker: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/issues
+Summary: Optional motion-event helper for Sentinel Snatch Protection. Works only with
+Description: |-
+  Optional motion-event helper for Sentinel Snatch Protection. Works only with matching same-signed Core and Controller.
+  
+  Warning: Optional Sentinel protections can irreversibly erase a device.
+  Device Owner privileges are not granted by ordinary APK installation.
+  Four companion packages use the same original developer signing key.
+
+RepoType: git
+Repo: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases.git
+
+# Do not let F-Droid generate four unrelated signing identities.
+AllowedAPKSigningKeys:
+  - 46520e33367a8f8c65980e98a06df9091e6dfa65b157ddf78d4fdbd9d97beeb7
+Binaries: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/releases/download/v%v/Nefarious-Sentinel-Motion-v%v.apk
+
+Builds:
+  - versionName: 1.0.0
+    versionCode: 4
+    disable: Signature-preserving reproducible build not yet validated against the published APK
+    commit: v1.0.0
+    subdir: motion-helper
+    gradle:
+      - 'yes'
+    prebuild: sed -i '/^[[:space:]]*signingConfig signingConfigs.release[[:space:]]*$/d' build.gradle
+
+AutoUpdateMode: None
+UpdateCheckMode: None
+CurrentVersion: 1.0.0
+CurrentVersionCode: 4
