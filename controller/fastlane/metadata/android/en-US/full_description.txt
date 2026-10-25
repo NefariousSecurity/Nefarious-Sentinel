@@ -1,0 +1,18 @@
+Nefarious Sentinel is an open-source Android security application.
+The Controller lets you configure a matching Sentinel Core, with USB
+data-host protection, a Dead Man's Switch, Snatch Protection and tamper
+safeguards.
+
+Standard Mode uses Android Device Administrator privileges with reduced
+capabilities. Hardened Mode requires a separately provisioned Device Owner
+Core on an eligible Android device. Installing from F-Droid does not grant
+Device Owner authority.
+
+The Core, Controller, Motion and SMS helper are separate packages that must
+use the same developer signing identity and compatible release versions.
+Some optional triggers can irreversibly erase the device. Maintain independent
+backups before enabling destructive protections.
+
+No Sentinel-hosted cloud management account is needed. Original work is
+derived in part from Oblivion V2 by Lethe Labs; this fork is independent.
+Version 1.0.0 is a prerelease pending final security acceptance.
