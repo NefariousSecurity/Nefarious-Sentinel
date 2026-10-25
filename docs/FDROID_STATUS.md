@@ -977,6 +977,40 @@ The four real public application metadata files stay disabled.
 release tag, signed binary or device was changed by the failure
 or this lint-harness correction.
 
+## All four F-Droid v1.0.1 metadata recipes lint PASS, 25 October 2026
+
+After correcting the isolated validation harness to provide the
+complete official fdroiddata `config/` tree (YAML definitions and
+category icon files), the developer successfully ran the official
+`fdroid readmeta` and `fdroid lint` checks inside the F-Droid
+buildserver image for each of four **temporary enabled copies**
+of the Sentinel v1.0.1 build recipes.
+
+**PASS (4/4):**
+- `com.nefarioussecurity.sentinel` (Core)
+- `com.nefarioussecurity.sentinel.controller`
+- `com.nefarioussecurity.sentinel.motion`
+- `com.nefarioussecurity.sentinel.sms`
+
+Evidence workspace:
+`~/Projects/fdroid-sentinel-validation/v101-fdroid-lint.lDsGcnzF`
+including `lint.log`, official fdroidserver commit
+`2d1e622fbbce7eec379453983435e5b14bea22b5`,
+and fdroiddata config commit
+`3f55022e917d1c20d5ba3b360ca4a1dfef19efb6`.
+
+The real recipes on the public
+`release/v1.0.1-fdroid-prep` branch remain **disabled**.
+Lint checks alone are not a substitute for the final
+`fdroid build --test --local` recipe build, verification of
+the resulting unsigned APK against the already public
+developer-signed APK and GitLab fdroiddata submission.
+
+A new isolated harness
+`scripts/sentinel-v101-fdroid-recipe-build.sh` will exercise
+the official Core recipe first, without copying signing
+credentials or modifying the phone, tags or release assets.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
