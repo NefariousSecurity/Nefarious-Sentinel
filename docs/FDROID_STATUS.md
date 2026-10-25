@@ -511,6 +511,33 @@ independently reverified on the updated source revision**. Keep the
 release blocked pending unit tests, reproducibility recheck and
 signing/release gates.
 
+## v1.0.1 release JVM unit-test rerun PASS, 25 October 2026
+
+The release test suite was rerun on Mint from a fresh extracted copy of
+private commit `ccd6c1419440acc49d8909af4049c6482f77442e`.
+Verification confirmed that the *only* change since the prior v1.0.1
+candidate (`cd76b4b`) was in
+`app/src/test/java/com/localruntime/core/beta/StableReleaseBuildConfigTest.kt`:
+the test's expected version name and version code were updated to
+`1.0.1` / `5`, respectively.
+
+The two release test tasks
+`:app:testReleaseUnitTest` and `:controller:testReleaseUnitTest`
+**PASS**, with Gradle reporting **91 actionable tasks, all 91 executed**,
+`BUILD SUCCESSFUL` in 22 seconds, using
+`--no-build-cache --rerun-tasks`. No device-level instrumentation or
+destructive tests were run.
+
+Test workspace:
+`~/Projects/fdroid-sentinel-validation/v101-tests.HRcBpLIK`.
+
+Remaining verification: the existing byte-identical Mint and F-Droid
+container APKs were built from `cd76b4b`, while the candidate branch
+now points to test-only commit `ccd6c14`. Rebuild from the *final*
+commit to confirm signed-release payload bytes remain unchanged before
+signing and publication. This JVM test success alone is not device
+acceptance testing.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
