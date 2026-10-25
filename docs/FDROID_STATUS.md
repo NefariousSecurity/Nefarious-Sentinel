@@ -483,6 +483,34 @@ existing signer certificate, source/release publication after review,
 and signature-preserving binary verification via correctly versioned
 F-Droid metadata. Original v1.0.0 assets/tag remain immutable.
 
+## v1.0.1 release unit tests: version assertion fixed, awaiting rerun
+
+The initial candidate scratch `./gradlew :app:testReleaseUnitTest
+:controller:testReleaseUnitTest` run completed Controller tests and
+reported 55 Core tests, **one failed** at
+`StableReleaseBuildConfigTest.kt:32`. This assertion checked
+`BuildConfig.VERSION_NAME.startsWith("1.0.0")`, and a later assertion
+still expected `BuildConfig.VERSION_CODE == 4`, despite deliberate
+candidate version 1.0.1/code 5. Assertions for channel `STABLE`,
+`BETA_BUILD == false` and zero beta expiry executed before the failed
+version assertion.
+
+Private release branch now has a **test-only** fix in commit
+`ccd6c1419440acc49d8909af4049c6482f77442e`: version-name
+expectation 1.0.1 and version code expectation 5. No production source
+or Gradle release configuration changed. Test rerun still pending;
+do not claim release regression testing has passed until verified.
+
+The container diagnostic runner's reviewed private source commit was
+advanced to `ccd6c1419440acc49d8909af4049c6482f77442e` to avoid
+misleading runs against previous commit `cd76b4b`.
+Previously verified unsigned APK bytes were generated from `cd76b4b`.
+Because this change only affects tests, the release APK content is
+expected to remain the same, but **that expectation has not been
+independently reverified on the updated source revision**. Keep the
+release blocked pending unit tests, reproducibility recheck and
+signing/release gates.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
