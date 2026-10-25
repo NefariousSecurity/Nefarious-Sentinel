@@ -5,10 +5,10 @@ with opt-in actions that can lock, reboot or irreversibly wipe a device.
 
 ## Reporting safely
 
-- Public [GitHub Issues](https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/issues)
+- Public [GitHub Issues](https://github.com/NefariousSecurity/Nefarious-Sentinel/issues)
   are for ordinary bugs, documentation corrections and compatibility reports.
 - Suspected security vulnerabilities must be disclosed **privately** via
-  [Security Advisories](https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/security/advisories).
+  [Security Advisories](https://github.com/NefariousSecurity/Nefarious-Sentinel/security/advisories).
   See [SECURITY.md](SECURITY.md).
 - Never disclose signing keys, account identifiers, phone numbers, PINs,
   customer logs or destructive proof-of-concept steps in a public issue.
@@ -27,4 +27,4 @@ with opt-in actions that can lock, reboot or irreversibly wipe a device.
 - Include a minimal reproducible test and note Android version/device model
   when proposing a behavioural change, without posting uniquely identifying data.
 
-Public source is available under the [v1.0.0 tag](https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/tree/v1.0.0).
+Public source is available under the [v1.0.0 tag](https://github.com/NefariousSecurity/Nefarious-Sentinel/tree/v1.0.0).
