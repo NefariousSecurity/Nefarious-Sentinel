@@ -24,10 +24,10 @@ AllowedAPKSigningKeys:
 Binaries: https://github.com/NefariousSecurity/Nefarious-Sentinel/releases/download/v%v/Nefarious-Sentinel-Core-v%v.apk
 
 Builds:
-  - versionName: 1.0.0
-    versionCode: 4
-    disable: Signature-preserving reproducible build not yet validated against the published APK
-    commit: v1.0.0
+  - versionName: 1.0.1
+    versionCode: 5
+    disable: Unpublished v1.0.1 release and final F-Droid recipe verification pending
+    commit: v1.0.1
     subdir: app
     gradle:
       - 'yes'
@@ -35,5 +35,5 @@ Builds:
 
 AutoUpdateMode: None
 UpdateCheckMode: None
-CurrentVersion: 1.0.0
-CurrentVersionCode: 4
+CurrentVersion: 1.0.1
+CurrentVersionCode: 5
