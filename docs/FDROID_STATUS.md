@@ -452,6 +452,37 @@ This SDK preflight failure is **not an APK build or binary comparison
 failure**. Independent F-Droid container compilation remains
 unverified until a new test completes.
 
+## v1.0.1 unsigned F-Droid buildserver-image verification PASS, 25 October 2026
+
+The updated `scripts/fdroid-v101-container-check.sh` provisioned SDK
+platform 34, build-tools 34.0.0 and platform-tools inside the official
+`registry.gitlab.com/fdroid/fdroidserver:buildserver` image. The build
+completed **251 executed Gradle tasks**, using
+`--no-daemon --no-build-cache --rerun-tasks`.
+
+**PASS: all four whole-file unsigned APK SHA-256 hashes are byte-identical
+between the independent F-Droid-container build and the two previously
+verified clean Mint builds.**
+
+| Module | Verified SHA-256 |
+| --- | --- |
+| Core (`app`) | `feab9330016b9b05e095c3ed8fe6159106831f072021ce6d971c40b2fef2121e` |
+| Controller | `30d1a4a4ac2ae980ae6d22cc8a99d9b3567aa7e1b1cab887e08c15e8ebb75ba9` |
+| Motion | `a01c0518d7d1e4199ef2c5f8d27c7bc02d81eba44698e64037f41736ca5dff09` |
+| SMS | `1593dacdd99bcd679240947eb483fc9c92b3fd0b726939d6c5e03fc0af0d508e` |
+
+Container scratch build (preserved):
+`~/Projects/fdroid-sentinel-validation/v101-fdroid.mQnwuj7g`.
+
+This proves cross-environment reproducible **unsigned** candidate APKs,
+NOT yet the final F-Droid `fdroid build` + published
+developer-signed `Binaries` verification. The public v1.0.1 source
+tag and corresponding developer-signed APKs have **not** been published.
+Remaining gates: regression tests, controlled release signing with the
+existing signer certificate, source/release publication after review,
+and signature-preserving binary verification via correctly versioned
+F-Droid metadata. Original v1.0.0 assets/tag remain immutable.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
