@@ -74,6 +74,58 @@ the signed release APKs.
 Important: local reproducibility does not itself prove F-Droid buildserver
 reproducibility. A distinct F-Droid build container/CI run is also required.
 
+## Verified local reproducibility and next buildserver test
+
+On 25 October 2026 Mint successfully rebuilt **all four unsigned APKs**
+from the public `v1.0.0` tag and `apksigcopier compare --unsigned` matched
+them with the original developer-signed Core, Controller, Motion and SMS APKs.
+The Gradle output reported 251 tasks, of which 89 came from cache. This is
+a **local** reproducibility success, **not** an independent F-Droid buildserver
+success.
+
+The public `scripts/fdroid-buildserver-validate.sh` provides a fail-closed
+staging/test workflow:
+
+```bash
+cd ~/Projects/Nefarious-Sentinel
+git pull --ff-only origin main
+bash -n scripts/fdroid-buildserver-validate.sh
+bash scripts/fdroid-buildserver-validate.sh --check
+```
+
+After confirming Docker daemon access and free disk capacity (F-Droid's guide
+anticipates several GB for the build image and workspace), run:
+
+```bash
+bash scripts/fdroid-buildserver-validate.sh --prepare
+bash scripts/fdroid-buildserver-validate.sh --run
+```
+
+`--prepare` shallow-clones official upstream `fdroiddata` and `fdroidserver`
+repositories into a NEW `~/Projects/fdroid-sentinel-validation` folder,
+stages four metadata files, and removes their `disable` flags **only inside
+that disposable validation workspace**. It never publishes to GitLab.
+
+`--run` uses the published official F-Droid buildserver Docker image to
+run `fdroid readmeta`, `fdroid lint`, and `fdroid build` on all four staged
+applications. It mounts the separate fdroiddata workspace writable, mounts
+fdroidserver read-only, and mounts **no** phones, APK signing keys or host
+Docker socket into the container. The image/build itself can access the
+internet and should be treated as execution of a third-party build stack.
+
+Do not chmod the Docker socket or casually put the local user in the
+`docker` group; Docker control is effectively root-equivalent on the host.
+
+**The test may fail** due to environment-specific dependencies, source
+scanner policy, incompatibility with installed F-Droid build tools, or
+byte-level differences. Inspect exact output before updating recipes.
+A green Gradle build alone is not sufficient evidence of binary equivalence
+on the F-Droid buildserver.
+
+Official docs:
+- https://f-droid.org/docs/Submitting_to_F-Droid_Quick_Start_Guide/
+- https://f-droid.org/docs/Reproducible_Builds/
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
