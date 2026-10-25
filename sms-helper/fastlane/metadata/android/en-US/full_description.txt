@@ -1,0 +1,16 @@
+Sentinel Message Service is an optional Android SMS event helper for
+Nefarious Sentinel, used only with a matching Sentinel Core and Controller.
+
+The helper requires Android SMS receive permission to process incoming SMS
+events. Trigger validation and action authority reside in Sentinel Core,
+not in this helper. SMS-based wipe is an opt-in, potentially destructive
+feature; it may irreversibly erase an Android device.
+
+Do not activate destructive triggers on a phone with irreplaceable data.
+Real incoming carrier SMS acceptance has not been fully verified for
+the current release candidate. Installing through F-Droid does not grant
+Device Owner authority.
+
+The matching Core, Controller and Motion helper must retain the same
+developer signing identity. Nefarious Sentinel is open-source AGPL-3.0,
+derived in part from Oblivion V2 by Lethe Labs.
