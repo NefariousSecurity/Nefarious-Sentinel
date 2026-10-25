@@ -4,9 +4,9 @@ Categories:
   - Security
 License: AGPL-3.0-only
 AuthorName: NefariousSecurity
-WebSite: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases
-SourceCode: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases
-IssueTracker: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/issues
+WebSite: https://github.com/NefariousSecurity/Nefarious-Sentinel
+SourceCode: https://github.com/NefariousSecurity/Nefarious-Sentinel
+IssueTracker: https://github.com/NefariousSecurity/Nefarious-Sentinel/issues
 Summary: Android security controls for local Sentinel protection
 Description: |-
   Local-first Android protection Controller for compatible Sentinel Core. Supports Standard Mode and Hardened Device Owner configuration.
@@ -16,12 +16,12 @@ Description: |-
   Four companion packages use the same original developer signing key.
 
 RepoType: git
-Repo: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases.git
+Repo: https://github.com/NefariousSecurity/Nefarious-Sentinel.git
 
 # Do not let F-Droid generate four unrelated signing identities.
 AllowedAPKSigningKeys:
   - 46520e33367a8f8c65980e98a06df9091e6dfa65b157ddf78d4fdbd9d97beeb7
-Binaries: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/releases/download/v%v/Nefarious-Sentinel-Controller-v%v.apk
+Binaries: https://github.com/NefariousSecurity/Nefarious-Sentinel/releases/download/v%v/Nefarious-Sentinel-Controller-v%v.apk
 
 Builds:
   - versionName: 1.0.0
