@@ -12,6 +12,7 @@ from __future__ import annotations
 import glob
 import hashlib
 import os
+import struct
 from pathlib import Path
 import sys
 import zipfile
@@ -36,6 +37,85 @@ def load_apk(path: Path) -> tuple[dict[str, tuple[str, int]], int, str]:
             if not info.is_dir()
         }
     return members, path.stat().st_size, sha(path.read_bytes())
+
+def dex_summary(apk: Path) -> tuple[dict[str, int], list[bytes], bytes]:
+    """Read DEX header tables and raw MUTF-8 string bytes, with no writes."""
+    with zipfile.ZipFile(apk) as z:
+        blob = z.read("classes.dex")
+    if not blob.startswith(b"dex\\n") or len(blob) < 0x70:
+        raise ValueError(f"Unsupported or truncated classes.dex in {apk}")
+    fields = {
+        "file_size": 0x20,
+        "string_ids_size": 0x38,
+        "type_ids_size": 0x40,
+        "proto_ids_size": 0x48,
+        "field_ids_size": 0x50,
+        "method_ids_size": 0x58,
+        "class_defs_size": 0x60,
+    }
+    stats = {name: struct.unpack_from("<I", blob, off)[0]
+             for name, off in fields.items()}
+    count = stats["string_ids_size"]
+    ids_off = struct.unpack_from("<I", blob, 0x3c)[0]
+    if count > 1000000 or ids_off + 4 * count > len(blob):
+        raise ValueError("Malformed DEX string ID table")
+    strings = []
+    for i in range(count):
+        data_off = struct.unpack_from("<I", blob, ids_off + 4 * i)[0]
+        if data_off >= len(blob):
+            raise ValueError("DEX string offset outside file")
+        cursor = data_off
+        for _ in range(5):  # ULEB128 encoded UTF-16 length
+            v = blob[cursor]
+            cursor += 1
+            if v < 0x80:
+                break
+        else:
+            raise ValueError("Malformed DEX string length")
+        end = blob.find(b"\\x00", cursor)
+        if end == -1:
+            raise ValueError("Unterminated DEX string")
+        strings.append(blob[cursor:end])
+    return stats, strings, blob
+
+
+def compare_dex(reference: Path, built: Path) -> None:
+    print("\\n===== DEX STRUCTURE COMPARISON (READ ONLY) =====")
+    try:
+        old_stats, old_strings, old_bytes = dex_summary(reference)
+        new_stats, new_strings, new_bytes = dex_summary(built)
+    except (OSError, ValueError, zipfile.BadZipFile, KeyError, IndexError) as error:
+        print(f"Cannot inspect DEX tables: {error}")
+        return
+    for key in old_stats:
+        old, new = old_stats[key], new_stats[key]
+        print(f"{key}: published={old:,}, F-Droid={new:,}"
+              + (" [DIFFERENT]" if old != new else ""))
+    old_set, new_set = set(old_strings), set(new_strings)
+    removed, added = sorted(old_set - new_set), sorted(new_set - old_set)
+    print(f"DEX string pool: published={len(old_strings):,}, "
+          f"F-Droid={len(new_strings):,}; "
+          f"removed={len(removed)}, added={len(added)}")
+    for label, entries in (("ONLY PUBLISHED", removed),
+                           ("ONLY F-DROID", added)):
+        for item in entries[:12]:
+            print(f"  {label}: {item[:140]!r}")
+        if len(entries) > 12:
+            print(f"  {label}: ... and {len(entries)-12} more strings")
+    if not added and not removed and old_strings != new_strings:
+        first = next(i for i, (a, b) in enumerate(zip(old_strings, new_strings))
+                     if a != b)
+        print(f"String pools contain the same values, but order differs "
+              f"(first different index: {first})")
+    if not added and not removed and old_strings == new_strings:
+        print("String pools contain the same values in the same order.")
+    n = min(len(old_bytes), len(new_bytes))
+    first_differences = [i for i in range(0x70, n)
+                         if old_bytes[i] != new_bytes[i]][:10]
+    print(f"First DEX offsets differing after the header: "
+          f"{[hex(x) for x in first_differences]}")
+    print("Matching DEX tables or strings do not prove identical method code.")
+
 
 def output(label: str, path: Path, base: dict | None) -> None:
     if not path.is_file():
@@ -100,6 +180,7 @@ def main() -> int:
         if path.is_file():
             found = True
             output("F-DROID UNSIGNED BUILD", path, ref)
+            compare_dex(SIGNED, path)
             break
     if not found:
         print("NOT FOUND: F-Droid Controller unsigned build in expected locations.")
