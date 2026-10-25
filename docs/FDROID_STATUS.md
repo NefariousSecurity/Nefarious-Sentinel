@@ -1126,6 +1126,37 @@ existing four verified recipes use `AutoUpdateMode: None` and
 `UpdateCheckMode: None`, pending a documented coordinated-release
 reason or a checked automated-update policy.
 
+## Final four per-app F-Droid GitLab metadata files PASS lint, 25 October 2026
+
+The operator generated final clean YAML files for all four
+verified Sentinel packages from the already linted F-Droid
+candidate recipes, removed local preparatory comments and
+duplicate Summary/Description text (maintained upstream in
+Fastlane), and added a public upstream author website.
+A guarded comparison confirmed **each per-app `RepoType:`
+through all build instructions remained unchanged**.
+
+A fresh `fdroid readmeta` and `fdroid lint` pass, run in
+the official buildserver image using the preverified
+fdroidserver tools and fdroiddata configuration, reported:
+- Core: **PASS**
+- Controller: **PASS**
+- Motion: **PASS**
+- SMS: **PASS**
+
+Private local submission directory:
+`~/Projects/fdroid-sentinel-validation/v101-gitlab-final.BuUFpYKX/metadata`
+
+Mint has Git and Docker, but no `glab` executable.
+The next step is to fork the official
+`https://gitlab.com/fdroid/fdroiddata` repository to an
+author-controlled **public** GitLab project and create **four
+separate one-app-per-MR branches** from fdroiddata master.
+There are **no GitLab merge requests submitted yet**.
+Before submitting, check upstream Fastlane assets and
+the current F-Droid inclusion template including author contact
+and explanations for coordinated manual-only update modes.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
