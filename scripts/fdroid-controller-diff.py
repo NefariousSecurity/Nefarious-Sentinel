@@ -46,7 +46,7 @@ def output(label: str, path: Path, base: dict | None) -> None:
     except (OSError, zipfile.BadZipFile) as err:
         print(f"ERROR: {label}: {path}: {err}")
         return
-    print(f"\\n===== {label} =====")
+    print(f"\n===== {label} =====")
     print(f"Path: {path}")
     print(f"APK bytes: {size:,}; file SHA-256: {whole_hash}")
     relevant = sorted(
@@ -116,7 +116,7 @@ def main() -> int:
             output("EARLIER MINT UNSIGNED BUILD", path, ref)
     else:
         print("Earlier Mint scratch APK not found (optional).")
-    print("\\nThis diagnostic did not modify files or contact devices.")
+    print("\nThis diagnostic did not modify files or contact devices.")
     return 0
 
 if __name__ == "__main__":
