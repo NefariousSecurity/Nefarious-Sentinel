@@ -780,6 +780,29 @@ Pixel 10a installed-device upgrade and protection-state assessment,
 public v1.0.1 release/tag, live download URL checks and final official
 F-Droid metadata build/merge request remain pending.
 
+## Pixel 10a staged Controller-only v1.0.1 upgrade, 25 October 2026
+
+The developer ran the guarded `adb install -r` procedure
+against the verified development **Pixel 10a (stallion)**.
+The script checked the protected stage `SHA256SUMS` (four APKs OK),
+verified the expected device, found installed Controller
+`versionName=1.0.0` / `versionCode=4`, verified the candidate APK
+signer against the pinned certificate, then required an interactive
+`YES` after instructing the operator to verify the current
+destructive-protection state on the handset.
+
+**Result:** Android reported `Success` for the Controller-only
+incremental install. A follow-up `dumpsys package` showed Controller
+`versionName=1.0.1`, `versionCode=5`. The Core, Motion and SMS
+packages were **not targeted for an upgrade** by this command.
+
+**Limitations:** Android installer success is not proof of Controller
+UI operation, existing configuration retention, or live connectivity
+with the still-v1.0.0 Core. Device Owner preservation and runtime
+protection states should be rechecked before attempting Core upgrade.
+No upgrade of Core, Motion or SMS is confirmed yet; nothing published
+to the public release or submitted to official F-Droid.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
