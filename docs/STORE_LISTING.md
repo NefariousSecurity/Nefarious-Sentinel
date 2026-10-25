@@ -8,9 +8,9 @@
 - **Licence:** GNU AGPL-3.0
 - **Current release:** v1.0.0 **release candidate / prerelease**
 - **Canonical artwork:** `controller/src/main/res/drawable-nodpi/sentinel_raven_shield_logo.png`.
-- **Source:** https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases
-- **Release:** https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/releases/tag/v1.0.0
-- **Security reports:** https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/security/advisories
+- **Source:** https://github.com/NefariousSecurity/Nefarious-Sentinel
+- **Release:** https://github.com/NefariousSecurity/Nefarious-Sentinel/releases/tag/v1.0.0
+- **Security reports:** https://github.com/NefariousSecurity/Nefarious-Sentinel/security/advisories
 
 Do not describe this prerelease as finally accepted until the remaining release gates are closed. Do not claim live SMS carrier ingress has been verified.
 
