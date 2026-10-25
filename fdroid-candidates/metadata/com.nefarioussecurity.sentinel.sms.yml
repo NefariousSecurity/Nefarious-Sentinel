@@ -7,7 +7,7 @@ AuthorName: NefariousSecurity
 WebSite: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases
 SourceCode: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases
 IssueTracker: https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/issues
-Summary: Optional SMS event helper for Sentinel. Permission to receive SMS is require
+Summary: Optional SMS event helper for Nefarious Sentinel
 Description: |-
   Optional SMS event helper for Sentinel. Permission to receive SMS is required; carrier ingress remains unverified for the current release candidate.
   
