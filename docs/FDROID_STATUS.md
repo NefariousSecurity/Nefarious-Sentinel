@@ -375,6 +375,27 @@ build logs if available. Do not assume that an identical current working
 tree proves the source was identical when the original APK was built.
 Do not change v1.0.0 tag or signed release assets to force a match.
 
+## Original compiled BackHandler verified, 25 October 2026
+
+A targeted read-only `javap -c -p` inspection found the
+`androidx.activity.compose.BackHandlerKt.BackHandler(...)` invocation
+in **all three Controller pre-R8 builds**:
+- Original private release: invocation at JVM bytecode offset 704.
+- Fresh no-build-cache Mint: invocation at offset 643.
+- F-Droid container: invocation at offset 643.
+
+Therefore, the original Controller **does include the system Back
+navigation handler**, and the hypothesis that its compiled output
+predates commit `cdf4898` *with that handler absent* is contradicted by
+direct evidence. Differences remain in other compiled Compose instructions,
+so the full Controller release still cannot pass independent F-Droid
+binary verification. No conclusion about runtime equivalence follows
+from these invocation offsets alone.
+
+Next: compare individual JVM methods/instruction streams from the
+original and fresh Kotlin class outputs, rather than infer a missing
+feature from class-file hashes.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
