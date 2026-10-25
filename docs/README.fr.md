@@ -4,7 +4,7 @@
 
 Attention : certaines protections peuvent provoquer une réinitialisation d'usine irréversible. Utilisez les fonctions destructrices uniquement sur des appareils appropriés après avoir sauvegardé vos données et compris les déclencheurs.
 
-La documentation principale et actuelle du projet est [README.md](../README.md). Les publications officielles, leurs sommes SHA-256 et les instructions de vérification se trouvent sur [Nefarious Sentinel Releases](https://github.com/NefariousSecurity/Nefarious-Sentinel-Releases/releases).
+La documentation principale et actuelle du projet est [README.md](../README.md). Les publications officielles, leurs sommes SHA-256 et les instructions de vérification se trouvent sur [Nefarious Sentinel Releases](https://github.com/NefariousSecurity/Nefarious-Sentinel/releases).
 
 Les fonctions incluent la protection des connexions USB hôtes de données, un minuteur de sécurité (« Dead Man's Switch »), la protection contre l'arrachement de l'appareil, la protection du débogage et une fonction SMS facultative.
 
