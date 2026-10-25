@@ -803,6 +803,31 @@ protection states should be rechecked before attempting Core upgrade.
 No upgrade of Core, Motion or SMS is confirmed yet; nothing published
 to the public release or submitted to official F-Droid.
 
+## Pixel 10a Motion/SMS helper v1.0.1 upgrade PASS, 25 October 2026
+
+After separately confirming that Controller v1.0.1 opens, accepts
+the existing management PIN, communicates with installed Core
+v1.0.0, and reports its destructive protections disabled, the
+developer ran the guarded Motion+SMS helper upgrade on the dedicated
+development Pixel 10a. Preflight confirmed the intended device,
+all four signed APK SHA-256 manifest entries, the expected installed
+Core 4 / Controller 5 / Motion 4 / SMS 4 version codes, the Sentinel
+Device Owner component, and the Motion and SMS package identity,
+v1.0.1/versionCode 5 and pinned signing certificate. The interactive
+confirmation was answered YES.
+
+Android reported `Success` for `adb install -r` of Motion and SMS;
+post-install `dumpsys package` checks confirmed **v1.0.1 / code 5**
+for both. A final `dumpsys device_policy` check confirmed that Core
+**remains Android Device Owner**. Core was **not** updated and remained
+v1.0.0/code 4 at this stage. No wipe, reset, or destructive acceptance
+test was performed.
+
+**Next gate:** Carefully update Core in place after rechecking that
+all destructive protections are currently disabled. Confirm the
+new Core version, retained Device Owner status, Controller/core
+communication and settings before publishing a v1.0.1 release.
+
 ## Outstanding gates before enabling any draft fdroiddata recipe
 
 1. All four APKs rebuild reproducibly from the immutable public tag.
