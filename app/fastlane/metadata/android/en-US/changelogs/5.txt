@@ -1,0 +1,1 @@
+Sentinel Core 1.0.1 (code 5): maintenance release with no protection-policy or protocol changes. Built reproducibly from public source with the existing signing key. Stable channel remains beta-expiry-free. Upgrades must retain previous safety configuration.
